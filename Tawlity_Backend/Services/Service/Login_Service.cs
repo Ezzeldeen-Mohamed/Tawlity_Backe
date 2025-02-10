@@ -6,7 +6,9 @@ using Tawlity_Backend.Dtos;
 using Tawlity_Backend.Models;
 using Tawlity_Backend.Services.Interface;
 using Tawlity_Backend.Services.IService;
-using Tawlity_Backend.SomeThingsWeWillUseInTheFuther;
+using BCrypt.Net;
+using Org.BouncyCastle.Tls;
+
 
 namespace Tawlity_Backend.Services.Service
 {
@@ -101,56 +103,51 @@ namespace Tawlity_Backend.Services.Service
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<ForgotPasswordResponseDto> ForgotPasswordAsync(ForgotPasswordDto dto)
+        public async Task<string?> ForgotPasswordAsync(ForgotPasswordDto dto)
         {
-            var employee = await _repository.GetEmployeeByEmailAsync(dto.Email);
-            if (employee == null)
-            {
-                // Always return a generic message for security
-                return new ForgotPasswordResponseDto
-                {
-                    Message = "If an account with that email exists, a password reset link has been sent."
-                };
-            }
+            var user = await _repository.GetEmployeeByEmailAsync(dto.Email);
+            if (user == null)
+                return "Email not registered.";
 
-            // Generate reset token and set expiry
             var token = Guid.NewGuid().ToString();
-            employee.ResetToken = token;
-            employee.ResetTokenExpiry = DateTime.UtcNow.AddHours(1);
-            await _repository.UpdateEmployeeAsync(employee);
+            user.ResetToken = token;
+            user.ResetTokenExpiry = DateTime.UtcNow.AddHours(1);
+            await _repository.SaveChangesAsync();
 
-            // In production, integrate with an email service to send the reset link.
-            return new ForgotPasswordResponseDto
-            {
-                Message = $"Password reset link has been sent to {employee.EmployeeEmail}",
-                ResetToken = token // For demo/testing purposes only.
-            };
+            var subject = "Reset Your Password";
+            //var resetLink = $"https://localhost:7039/api/Regester/reset-password?token={token}";
+            var resetLink = $"This is your token:( {token} )";
+            //var body = $"<p>Click <a href='{resetLink}'>here</a> to reset your password.</p>";
+            var body = $"<p> {resetLink} to reset your password.</p>";
+
+            await _emailService.SendEmailAsync(dto.Email, subject, body);
+
+            return "Password reset link has been sent to your email.";
         }
-        public async Task<ResetPasswordResponseDto> ResetPasswordAsync(ResetPasswordDto dto)
+
+        public async Task<string?> ResetPasswordAsync(string token, ResetPasswordDto dto)
         {
-            var employee = await _repository.GetEmployeeByResetTokenAsync(dto.Token);
-            if (employee == null || employee.ResetTokenExpiry == null || employee.ResetTokenExpiry < DateTime.UtcNow)
-            {
-                throw new Exception("Invalid or expired token.");
-            }
-            // Update the user's password with a hashed version.
-            // Clear the reset token fields.
-            employee.ResetToken = null;
-            employee.ResetTokenExpiry = null;
+            var user = await _repository.GetUserByResetTokenAsync(token);
+            if (user == null)
+                return "Invalid or expired token.";
 
-            employee.EmployeePassword= HashPassword(dto.NewPassword);
-            employee.EmployeeConfirmPassword = HashPassword(dto.ConfirmPassword);
+            if (dto.NewPassword != dto.ConfirmPassword)
+                return "Passwords do not match.";
 
-            await _repository.UpdateEmployeeAsync(employee);
-            return new ResetPasswordResponseDto
-            {
-                Message = "Password has been reset successfully."
-            };
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            user.ResetToken = null;
+            user.ResetTokenExpiry = null;
+            user.EmployeeConfirmPassword=HashPassword(dto.ConfirmPassword);
+            user.EmployeePassword=HashPassword(dto.NewPassword);
+            await _repository.SaveChangesAsync();
+
+            return "Password changed successfully.";
         }
 
 
     }
 }
+
 /*
         public async Task<ForgotPasswordResponseDto> ForgotPasswordAsync(ForgotPasswordDto dto)
         {
