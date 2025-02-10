@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Tawlity_Backend.Data;
+using Tawlity_Backend.Repositories.Interface;
+using Tawlity_Backend.Repositories.Repositories;
 using Tawlity_Backend.Services;
 using Tawlity_Backend.Services.Interface;
 using Tawlity_Backend.Services.IService;
@@ -32,8 +34,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(x =>
     x.UseSqlServer(builder.Configuration.GetConnectionString("connection")));
 
+
 builder.Services.AddScoped<Login_IRepo, Login_Repo>();
 builder.Services.AddScoped<Login_IService, Login_Service>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<EmailService>();
 
 
@@ -79,12 +84,12 @@ builder.Services.AddSwaggerGen(options =>
             }
         });
 });
-
-
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+});
 
 var app = builder.Build();
-
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
