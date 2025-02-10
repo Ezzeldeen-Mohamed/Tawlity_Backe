@@ -11,6 +11,7 @@ namespace Tawlity_Backend.Dtos
         [Required]
         public string EmployeePassword { get; set; } = string.Empty;
     }
+
     public class Login_Message
     {
         public string Message { get; set; } = string.Empty;
