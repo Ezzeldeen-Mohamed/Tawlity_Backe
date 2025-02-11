@@ -19,6 +19,20 @@ var ValidIssuer = builder.Configuration["Jwt:Issuer"];
 
 
 
+// Enable CORS
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", builder =>
+    {
+        builder.AllowAnyOrigin()  // Allows all origins (You can restrict this to specific domains if needed)
+               .AllowAnyMethod()  // Allows all HTTP methods (GET, POST, PUT, DELETE, etc.)
+               .AllowAnyHeader(); // Allows all headers
+    });
+});
+
+
+
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -40,6 +54,10 @@ builder.Services.AddScoped<Login_IService, Login_Service>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<EmailService>();
+builder.Services.Configure<EmailService>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
+
 
 
 // Add Authentication with JWT Bearer   
@@ -100,6 +118,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Enable CORS
+app.UseCors("AllowAllOrigins");  // Apply the CORS policy
 
 app.UseAuthentication();
 app.UseAuthorization();

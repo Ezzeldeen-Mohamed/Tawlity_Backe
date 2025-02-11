@@ -1,35 +1,73 @@
-﻿using MailKit.Net.Smtp;
-using MimeKit;
-using Microsoft.Extensions.Configuration;
+﻿using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
-namespace Tawlity_Backend.Services
+
+public class EmailService
 {
-    public class EmailService
+    private readonly IConfiguration _configuration;
+
+    public EmailService(IConfiguration configuration)
     {
-        private readonly IConfiguration _config;
+        _configuration = configuration;
+    }
 
-        public EmailService(IConfiguration config)
+    public async Task SendEmailAsync(string toEmail, string subject, string body)
+    {
+        try
         {
-            _config = config;
-        }
+            // Load SMTP settings from `appsettings.json`
+            var smtpServer = _configuration["EmailSettings:SmtpServer"];
+            var smtpPort = int.Parse(_configuration["EmailSettings:SmtpPort"]);
+            var senderEmail = _configuration["EmailSettings:SenderEmail"];
+            var smtpUsername = _configuration["EmailSettings:SmtpUsername"];
+            var smtpPassword = _configuration["EmailSettings:SmtpPassword"];
 
-        public async Task SendEmailAsync(string toEmail, string subject, string body)
-        {
-            var email = new MimeMessage();
-            email.From.Add(new MailboxAddress("Tawlity Support", _config["EmailSettings:SenderEmail"]));
-            email.To.Add(new MailboxAddress("", toEmail));
-            email.Subject = subject;
-
-            email.Body = new TextPart("html")
+            // Validate email before sending
+            if (!IsValidEmail(toEmail))
             {
-                Text = body
-            };
+                throw new FormatException("Invalid email format.");
+            }
 
-            using var smtp = new SmtpClient();
-            await smtp.ConnectAsync(_config["EmailSettings:SmtpServer"], int.Parse(_config["EmailSettings:Port"]), false);
-            await smtp.AuthenticateAsync(_config["EmailSettings:SenderEmail"], _config["EmailSettings:Password"]);
-            await smtp.SendAsync(email);
-            await smtp.DisconnectAsync(true);
+            using (var client = new SmtpClient(smtpServer, smtpPort))
+            {
+                client.Credentials = new NetworkCredential(smtpUsername, smtpPassword);
+                client.EnableSsl = true;
+
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress(senderEmail),
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = true,
+                };
+
+                mailMessage.To.Add(toEmail);
+                await client.SendMailAsync(mailMessage);
+            }
+        }
+        catch (FormatException ex)
+        {
+            Console.WriteLine($"Email format error: {ex.Message}");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Email sending failed: {ex.Message}");
+            throw;
+        }
+    }
+
+    // Helper method to validate email format
+    private bool IsValidEmail(string email)
+    {
+        try
+        {
+            var mailAddress = new MailAddress(email);
+            return true;
+        }
+        catch
+        {
+            return false;
         }
     }
 }

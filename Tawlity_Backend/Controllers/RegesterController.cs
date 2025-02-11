@@ -78,35 +78,27 @@ namespace Tawlity_Backend.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
-        // POST: api/auth/forgot-password
         [HttpPost("forgot-password")]
         [AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var token = await _loginService.ForgotPasswordAsync(dto);
+            if (token == "User not found.")
+                return NotFound(token);
 
-            var response = await _loginService.ForgotPasswordAsync(dto);
-            return Ok(response);
+            // Simulating token return for simplicity
+            return Ok(new { ResetToken = token });
         }
 
-        // POST: api/auth/reset-password
-        [HttpPost("reset-password")]
+        [HttpPost("reset-password/{token}")]
         [AllowAnonymous]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+        public async Task<IActionResult> ResetPassword(string token, ResetPasswordDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var result = await _loginService.ResetPasswordAsync(token, dto);
+            if (result == "Invalid or expired token." || result == "Passwords do not match.")
+                return BadRequest(result);
 
-            try
-            {
-                var response = await _loginService.ResetPasswordAsync(dto);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            return Ok(result);
         }
 
     }

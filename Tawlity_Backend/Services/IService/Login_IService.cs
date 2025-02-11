@@ -7,7 +7,7 @@ namespace Tawlity_Backend.Services.IService
         //With Dtos
         Task<string> LoginAsync(LoginDto loginDto);
         Task<string> RegesterAsync(RegisterDto registerDto);
-        Task<ForgotPasswordResponseDto> ForgotPasswordAsync(ForgotPasswordDto dto);
-        Task<ResetPasswordResponseDto> ResetPasswordAsync(ResetPasswordDto dto);
+        Task<string> ForgotPasswordAsync(ForgotPasswordDto dto);
+        Task<string?> ResetPasswordAsync(string token, ResetPasswordDto dto);
     }
 }

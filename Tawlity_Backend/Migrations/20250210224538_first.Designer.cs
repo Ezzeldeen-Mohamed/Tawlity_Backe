@@ -12,7 +12,7 @@ using Tawlity_Backend.Data;
 namespace Tawlity_Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250209215704_first")]
+    [Migration("20250210224538_first")]
     partial class first
     {
         /// <inheritdoc />
@@ -573,6 +573,9 @@ namespace Tawlity_Backend.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)

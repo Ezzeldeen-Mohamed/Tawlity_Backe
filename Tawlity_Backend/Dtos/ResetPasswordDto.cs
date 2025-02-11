@@ -4,8 +4,6 @@ namespace Tawlity_Backend.Dtos
 {
     public class ResetPasswordDto
     {
-        [Required]
-        public string Token { get; set; } = string.Empty;
 
         [Required]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*[\d])(?=.*[!@#$%^&*]).{8,}$",

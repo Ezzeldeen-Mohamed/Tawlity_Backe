@@ -16,9 +16,11 @@ namespace Tawlity_Backend.Models
 
             [Phone]
             public string ?Phone { get; set; }
+            public string ?Address { get; set; }
 
-            // Relationships
-            public virtual ICollection<Image> Images { get; set; }
+
+        // Relationships
+        public virtual ICollection<Image> Images { get; set; }
 
             public virtual ICollection<Branch> Branches { get; set; } = new HashSet<Branch>();
             public virtual ICollection<MenuItem> MenuItems { get; set; } = new HashSet<MenuItem>();

@@ -11,6 +11,8 @@ namespace Tawlity_Backend.Services.Interface
         Task AddEmployeeAsync(User employee);
         Task<User?> GetEmployeeByResetTokenAsync(string token);
         Task UpdateEmployeeAsync(User employee);
+        Task SaveChangesAsync();
+        Task<User?> GetUserByResetTokenAsync(string token);
 
     }
 }

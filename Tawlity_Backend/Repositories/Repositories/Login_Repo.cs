@@ -39,5 +39,14 @@ namespace Tawlity_Backend.Services.Repo
         {
             return await _context.Employees.FirstOrDefaultAsync(e => e.ResetToken == token);
         }
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<User?> GetUserByResetTokenAsync(string token)
+        {
+            return await _context.Employees.FirstOrDefaultAsync(u => u.ResetToken == token && u.ResetTokenExpiry > DateTime.UtcNow);
+        }
     }
 }
