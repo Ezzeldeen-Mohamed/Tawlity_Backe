@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Tawlity_Backend.Data;
+using Tawlity_Backend.Repositories.Interface;
+using Tawlity_Backend.Repositories.Repositories;
 using Tawlity_Backend.Services;
 using Tawlity_Backend.Services.Interface;
 using Tawlity_Backend.Services.IService;
@@ -51,6 +53,7 @@ builder.Services.AddScoped<Login_IService, Login_Service>();
 builder.Services.AddSingleton<EmailService>();
 builder.Services.Configure<EmailService>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
 
 
 
