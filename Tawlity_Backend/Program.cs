@@ -1,8 +1,11 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
+using Tawlity.Core.Enums;
 using Tawlity_Backend.Data;
 using Tawlity_Backend.Repositories.Interface;
 using Tawlity_Backend.Repositories.Repositories;
@@ -57,6 +60,7 @@ builder.Services.AddSingleton<EmailService>();
 builder.Services.Configure<EmailService>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
+builder.Services.AddAutoMapper(typeof(IMapper));
 
 
 
@@ -104,7 +108,15 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("AdminOrOwner", policy =>
+        policy.RequireAssertion(context =>
+        {
+            var roleClaim = context.User.FindFirst(ClaimTypes.Role);
+            if (roleClaim == null) return false;
+
+            return roleClaim.Value == Employee_Role.Admin.ToString() ||
+                   roleClaim.Value == Employee_Role.RestaurantOwner.ToString();
+        }));
 });
 
 var app = builder.Build();

@@ -15,50 +15,41 @@ namespace Tawlity_Backend.Repositories.Repositories
         }
 
         public async Task<IEnumerable<Restaurant>> GetAllAsync()
-        {
-            return await _context.Restaurants.ToListAsync();
-        }
+            => await _context.Restaurants.ToListAsync();
 
-        public async Task<Restaurant> GetByIdAsync(int id)
-        {
-            return await _context.Restaurants.FindAsync(id);
-        }
+        public async Task<Restaurant?> GetByIdAsync(int id)
+            => await _context.Restaurants.FindAsync(id);
 
-        public async Task<IEnumerable<Restaurant>> SearchByNameAsync(string query)
-        {
-            return await _context.Restaurants
-                .Where(r => r.Name.Contains(query))
-                .ToListAsync();
-        }
+        public async Task<Restaurant?> GetByNameAsync(string name)
+            => await _context.Restaurants.FirstOrDefaultAsync(r => r.Name == name);
 
-        public async Task<IEnumerable<Restaurant>> GetNearbyRestaurantsAsync(double latitude, double longitude, double radius)
-        {
-            return await _context.Restaurants
-                .Where(r => EF.Functions.Like(r.Address, $"%{latitude},{longitude}%")) // Placeholder, you need actual geolocation logic
-                .ToListAsync();
-        }
+        public async Task<IEnumerable<Restaurant>> SearchAsync(string query)
+            => await _context.Restaurants.Where(r => r.Name.Contains(query) || r.Description.Contains(query)|| r.Address.Contains(query)).ToListAsync();
 
-        public async Task<Restaurant> CreateAsync(Restaurant restaurant)
+        public async Task<IEnumerable<Restaurant>> GetNearbyAsync(double lat, double lon, double radiusKm)
+            => await _context.Restaurants.Where(r =>
+                Math.Sqrt(Math.Pow(r.Latitude - lat, 2) + Math.Pow(r.Longitude - lon, 2)) <= radiusKm
+            ).ToListAsync();
+
+        public async Task AddAsync(Restaurant restaurant)
         {
             await _context.Restaurants.AddAsync(restaurant);
             await _context.SaveChangesAsync();
-            return restaurant;
         }
 
-        public async Task<bool> UpdateAsync(Restaurant restaurant)
+        public async Task UpdateAsync(Restaurant restaurant)
         {
             _context.Restaurants.Update(restaurant);
-            return await _context.SaveChangesAsync() > 0;
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task DeleteAsync(Restaurant restaurant)
         {
-            var restaurant = await GetByIdAsync(id);
-            if (restaurant == null) return false;
-
             _context.Restaurants.Remove(restaurant);
-            return await _context.SaveChangesAsync() > 0;
+            await _context.SaveChangesAsync();
         }
 
+        public async Task SaveChangesAsync()
+            => await _context.SaveChangesAsync();
     }
 }

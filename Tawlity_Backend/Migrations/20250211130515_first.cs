@@ -75,7 +75,9 @@ namespace Tawlity_Backend.Migrations
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Latitude = table.Column<double>(type: "float", nullable: false),
+                    Longitude = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -608,9 +610,9 @@ namespace Tawlity_Backend.Migrations
                 columns: new[] { "EmployeeId", "EmployeeCity", "EmployeeConfirmPassword", "EmployeeCreditCard", "EmployeeEmail", "EmployeeGender", "EmployeeName", "EmployeePassword", "EmployeePhone", "Employee_Role", "PasswordHash", "ResetToken", "ResetTokenExpiry" },
                 values: new object[,]
                 {
-                    { 1, 0, "Password@123", "1234567812345678", "ahmed.ali@example.com", 0, "Ahmed Ali", "Password@123", "01234567890", 2, "", null, null },
+                    { 1, 0, "Ezz123#", "1234567812345678", "ezzm80618@gmail.com", 0, "Ahmed Ali", "Ezz123#", "01234567890", 2, "", null, null },
                     { 2, 1, "Password@123", "2345678923456789", "fatma.ahmed@example.com", 1, "Fatma Ahmed", "Password@123", "01234567891", 1, "", null, null },
-                    { 3, 0, "Password@123", "2345678923456789", "ezzm80618@gmail.com", 0, "Ezzeldeen", "Password@123", "01234567891", 1, "", null, null }
+                    { 3, 0, "Password@123", "2345678923456789", "ezzm806@gmail.com", 0, "Ezzeldeen", "Password@123", "01234567891", 1, "", null, null }
                 });
 
             migrationBuilder.CreateIndex(

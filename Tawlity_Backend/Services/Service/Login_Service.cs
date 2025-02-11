@@ -86,7 +86,8 @@ namespace Tawlity_Backend.Services.Service
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, employee.EmployeeName),
-                new Claim(ClaimTypes.NameIdentifier, employee.EmployeeId.ToString())
+                new Claim(ClaimTypes.NameIdentifier, employee.EmployeeId.ToString()),
+                new Claim(ClaimTypes.Role, employee.Employee_Role.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));

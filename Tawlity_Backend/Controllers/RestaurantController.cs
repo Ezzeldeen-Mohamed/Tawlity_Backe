@@ -18,36 +18,47 @@ namespace Tawlity_Backend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllRestaurants() =>
-            Ok(await _service.GetAllRestaurantsAsync());
+        public async Task<IActionResult> GetAll()
+            => Ok(await _service.GetAllRestaurantsAsync());
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetRestaurantById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var restaurant = await _service.GetRestaurantByIdAsync(id);
-            return restaurant == null ? NotFound() : Ok(restaurant);
+            if (restaurant == null) return NotFound();
+            return Ok(restaurant);
         }
 
         [HttpPost]
-        [Authorize(Policy = "AdminOnly")]
-        public async Task<IActionResult> CreateRestaurant([FromBody] RestaurantDto dto)
+        [Authorize(Roles = "Admin, RestaurantOwner")]
+        public async Task<IActionResult> Create([FromBody] RestaurantDto dto)
         {
-            var newRestaurant = await _service.CreateRestaurantAsync(dto);
-            return CreatedAtAction(nameof(GetRestaurantById), new { id = newRestaurant.Id }, newRestaurant);
+            await _service.AddRestaurantAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = dto.Name }, dto);
         }
 
         [HttpPut("{id}")]
-        [Authorize(Policy = "AdminOnly")]
-        public async Task<IActionResult> UpdateRestaurant(int id, [FromBody] RestaurantDto dto)
+        [Authorize(Roles = "Admin, RestaurantOwner")]
+        public async Task<IActionResult> Update(int id, [FromBody] RestaurantDto dto)
         {
-            return await _service.UpdateRestaurantAsync(id, dto) ? NoContent() : NotFound();
+            await _service.UpdateRestaurantAsync(id, dto);
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Policy = "AdminOnly")]
-        public async Task<IActionResult> DeleteRestaurant(int id)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
         {
-            return await _service.DeleteRestaurantAsync(id) ? NoContent() : NotFound();
+            await _service.DeleteRestaurantAsync(id);
+            return NoContent();
         }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> Search([FromQuery] string query)
+            => Ok(await _service.SearchRestaurantsAsync(query));
+
+        [HttpGet("nearby")]
+        public async Task<IActionResult> GetNearby([FromQuery] double lat, [FromQuery] double lon, [FromQuery] double radius)
+            => Ok(await _service.GetNearbyRestaurantsAsync(lat, lon, radius));
     }
 }

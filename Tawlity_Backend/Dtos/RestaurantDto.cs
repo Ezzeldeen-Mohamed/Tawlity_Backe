@@ -18,4 +18,5 @@ namespace Tawlity_Backend.Dtos
         public string Address { get; set; }
     }
 
+
 }

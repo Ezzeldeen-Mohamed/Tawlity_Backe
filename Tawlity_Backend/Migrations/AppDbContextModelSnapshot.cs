@@ -578,6 +578,12 @@ namespace Tawlity_Backend.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -753,12 +759,12 @@ namespace Tawlity_Backend.Migrations
                         {
                             EmployeeId = 1,
                             EmployeeCity = 0,
-                            EmployeeConfirmPassword = "Password@123",
+                            EmployeeConfirmPassword = "Ezz123#",
                             EmployeeCreditCard = "1234567812345678",
-                            EmployeeEmail = "ahmed.ali@example.com",
+                            EmployeeEmail = "ezzm80618@gmail.com",
                             EmployeeGender = 0,
                             EmployeeName = "Ahmed Ali",
-                            EmployeePassword = "Password@123",
+                            EmployeePassword = "Ezz123#",
                             EmployeePhone = "01234567890",
                             Employee_Role = 2,
                             PasswordHash = ""
@@ -783,7 +789,7 @@ namespace Tawlity_Backend.Migrations
                             EmployeeCity = 0,
                             EmployeeConfirmPassword = "Password@123",
                             EmployeeCreditCard = "2345678923456789",
-                            EmployeeEmail = "ezzm80618@gmail.com",
+                            EmployeeEmail = "ezzm806@gmail.com",
                             EmployeeGender = 0,
                             EmployeeName = "Ezzeldeen",
                             EmployeePassword = "Password@123",
