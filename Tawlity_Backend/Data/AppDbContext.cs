@@ -39,8 +39,8 @@ namespace Tawlity_Backend.Data
                      EmployeeEmail = "ezzm80618@gmail.com",
                      EmployeeCity = Employee_City.Cairo,
                      EmployeeGender = Employee_Gender.male,
-                     EmployeePassword = "Ezz123#",
-                     EmployeeConfirmPassword = "Ezz123#",
+                     EmployeePassword = "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=",
+                     EmployeeConfirmPassword = "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=",
                      EmployeeCreditCard = "1234567812345678",
                      Employee_Role = Employee_Role.Admin
                  },
@@ -65,8 +65,8 @@ namespace Tawlity_Backend.Data
                     EmployeeEmail = "ezzm806@gmail.com",
                     EmployeeCity = Employee_City.Cairo,
                     EmployeeGender = Employee_Gender.male,
-                    EmployeePassword = "Password@123",
-                    EmployeeConfirmPassword = "Password@123",
+                    EmployeePassword = "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=",
+                    EmployeeConfirmPassword = "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=",
                     EmployeeCreditCard = "2345678923456789",
                     Employee_Role = Employee_Role.Customer
                 });

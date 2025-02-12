@@ -1,37 +1,40 @@
-﻿using Tawlity_Backend.Models;
+﻿using AutoMapper;
+using Tawlity_Backend.Models;
 using Tawlity_Backend.Repositories.Interface;
 using Tawlity_Backend.Services.IService;
+using Tawlity_Backend.Dtos;
 
-namespace Tawlity_Backend.Services.Service
+public class BranchService : IBranchService
 {
-    public class BranchService : IBranchService
+    private readonly IBranchRepository _branchRepository;
+    private readonly IMapper _mapper;
+
+    public BranchService(IBranchRepository branchRepository, IMapper mapper)
     {
-        private readonly IBranchRepository _branchRepository;
-
-        public BranchService(IBranchRepository branchRepository)
-        {
-            _branchRepository = branchRepository;
-        }
-
-        public async Task<IEnumerable<Branch>> GetBranchesByRestaurantIdAsync(int restaurantId)
-        {
-            return await _branchRepository.GetBranchesByRestaurantIdAsync(restaurantId);
-        }
-
-        public async Task<Branch?> GetBranchByIdAsync(int branchId)
-        {
-            return await _branchRepository.GetBranchByIdAsync(branchId);
-        }
-
-        public async Task AddBranchAsync(Branch branch)
-        {
-            await _branchRepository.AddBranchAsync(branch);
-        }
-
-        public async Task DeleteBranchAsync(int branchId)
-        {
-            await _branchRepository.DeleteBranchAsync(branchId);
-        }
+        _branchRepository = branchRepository;
+        _mapper = mapper;
     }
 
+    public async Task<IEnumerable<BranchDto>> GetBranchesByRestaurantIdAsync(int restaurantId)
+    {
+        var branches = await _branchRepository.GetBranchesByRestaurantIdAsync(restaurantId);
+        return _mapper.Map<IEnumerable<BranchDto>>(branches);
+    }
+
+    public async Task<BranchDto?> GetBranchByIdAsync(int branchId)
+    {
+        var branch = await _branchRepository.GetBranchByIdAsync(branchId);
+        return branch == null ? null : _mapper.Map<BranchDto>(branch);
+    }
+
+    public async Task AddBranchAsync(CreateBranchDto branchDto)
+    {
+        var branch = _mapper.Map<Branch>(branchDto);
+        await _branchRepository.AddBranchAsync(branch);
+    }
+
+    public async Task DeleteBranchAsync(int branchId)
+    {
+        await _branchRepository.DeleteBranchAsync(branchId);
+    }
 }

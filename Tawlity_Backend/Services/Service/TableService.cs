@@ -1,36 +1,44 @@
-﻿using Tawlity_Backend.Models;
+﻿using AutoMapper;
+using Tawlity_Backend.Models;
 using Tawlity_Backend.Repositories.Interface;
 using Tawlity_Backend.Services.IService;
+using Tawlity_Backend.Dtos; // Import DTOs
 
-namespace Tawlity_Backend.Services.Service
+public class TableService : ITableService
 {
-    public class TableService : ITableService
+    private readonly ITableRepository _tableRepository;
+    private readonly IMapper _mapper;
+
+    public TableService(ITableRepository tableRepository, IMapper mapper)
     {
-        private readonly ITableRepository _tableRepository;
+        _tableRepository = tableRepository;
+        _mapper = mapper;
+    }
 
-        public TableService(ITableRepository tableRepository)
-        {
-            _tableRepository = tableRepository;
-        }
+    public async Task<IEnumerable<TableDto>> GetTablesByBranchIdAsync(int branchId)
+    {
+        var tables = await _tableRepository.GetTablesByBranchIdAsync(branchId);
+        return _mapper.Map<IEnumerable<TableDto>>(tables);
+    }
 
-        public async Task<IEnumerable<Table>> GetTablesByBranchIdAsync(int branchId)
-        {
-            return await _tableRepository.GetTablesByBranchIdAsync(branchId);
-        }
+    public async Task<TableDto?> GetTableByIdAsync(int tableId)
+    {
+        var table = await _tableRepository.GetTableByIdAsync(tableId);
+        return table == null ? null : _mapper.Map<TableDto>(table);
+    }
 
-        public async Task<Table?> GetTableByIdAsync(int tableId)
-        {
-            return await _tableRepository.GetTableByIdAsync(tableId);
-        }
+    public async Task AddTableAsync(CreateTableDto tableDto)
+    {
+        var table = _mapper.Map<Table>(tableDto);
+        await _tableRepository.AddTableAsync(table);
+    }
 
-        public async Task AddTableAsync(Table table)
-        {
-            await _tableRepository.AddTableAsync(table);
-        }
+    public async Task<bool> DeleteTableAsync(int tableId)
+    {
+        var existingTable = await _tableRepository.GetTableByIdAsync(tableId);
+        if (existingTable == null) return false;
 
-        public async Task DeleteTableAsync(int tableId)
-        {
-            await _tableRepository.DeleteTableAsync(tableId);
-        }
+        await _tableRepository.DeleteTableAsync(tableId);
+        return true;
     }
 }

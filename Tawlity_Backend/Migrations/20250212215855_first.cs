@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Tawlity_Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class firsty : Migration
+    public partial class first : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -274,7 +274,9 @@ namespace Tawlity_Backend.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TransactionId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     RestaurantId = table.Column<int>(type: "int", nullable: false)
@@ -622,9 +624,9 @@ namespace Tawlity_Backend.Migrations
                 columns: new[] { "EmployeeId", "EmployeeCity", "EmployeeConfirmPassword", "EmployeeCreditCard", "EmployeeEmail", "EmployeeGender", "EmployeeName", "EmployeePassword", "EmployeePhone", "Employee_Role", "PasswordHash", "ResetToken", "ResetTokenExpiry" },
                 values: new object[,]
                 {
-                    { 1, 0, "Ezz123#", "1234567812345678", "ezzm80618@gmail.com", 0, "Ahmed Ali", "Ezz123#", "01234567890", 2, "", null, null },
+                    { 1, 0, "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=", "1234567812345678", "ezzm80618@gmail.com", 0, "Ahmed Ali", "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=", "01234567890", 2, "", null, null },
                     { 2, 1, "Password@123", "2345678923456789", "fatma.ahmed@example.com", 1, "Fatma Ahmed", "Password@123", "01234567891", 1, "", null, null },
-                    { 3, 0, "Password@123", "2345678923456789", "ezzm806@gmail.com", 0, "Ezzeldeen", "Password@123", "01234567891", 1, "", null, null }
+                    { 3, 0, "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=", "2345678923456789", "ezzm806@gmail.com", 0, "Ezzeldeen", "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=", "01234567891", 1, "", null, null }
                 });
 
             migrationBuilder.CreateIndex(

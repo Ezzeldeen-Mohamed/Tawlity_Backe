@@ -12,8 +12,8 @@ using Tawlity_Backend.Data;
 namespace Tawlity_Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250212120049_firsty")]
-    partial class firsty
+    [Migration("20250212215855_first")]
+    partial class first
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -453,8 +453,16 @@ namespace Tawlity_Backend.Migrations
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("RestaurantId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TransactionId")
                         .IsRequired()
@@ -776,12 +784,12 @@ namespace Tawlity_Backend.Migrations
                         {
                             EmployeeId = 1,
                             EmployeeCity = 0,
-                            EmployeeConfirmPassword = "Ezz123#",
+                            EmployeeConfirmPassword = "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=",
                             EmployeeCreditCard = "1234567812345678",
                             EmployeeEmail = "ezzm80618@gmail.com",
                             EmployeeGender = 0,
                             EmployeeName = "Ahmed Ali",
-                            EmployeePassword = "Ezz123#",
+                            EmployeePassword = "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=",
                             EmployeePhone = "01234567890",
                             Employee_Role = 2,
                             PasswordHash = ""
@@ -804,12 +812,12 @@ namespace Tawlity_Backend.Migrations
                         {
                             EmployeeId = 3,
                             EmployeeCity = 0,
-                            EmployeeConfirmPassword = "Password@123",
+                            EmployeeConfirmPassword = "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=",
                             EmployeeCreditCard = "2345678923456789",
                             EmployeeEmail = "ezzm806@gmail.com",
                             EmployeeGender = 0,
                             EmployeeName = "Ezzeldeen",
-                            EmployeePassword = "Password@123",
+                            EmployeePassword = "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=",
                             EmployeePhone = "01234567891",
                             Employee_Role = 1,
                             PasswordHash = ""

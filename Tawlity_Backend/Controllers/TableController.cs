@@ -1,48 +1,53 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Tawlity_Backend.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using Tawlity_Backend.Services.IService;
+using Tawlity_Backend.Dtos;
 
-namespace Tawlity_Backend.Controllers
+[Route("api/tables")]
+[ApiController]
+public class TableController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TableController : ControllerBase
+    private readonly ITableService _tableService;
+
+    public TableController(ITableService tableService)
     {
-        private readonly ITableService _tableService;
+        _tableService = tableService;
+    }
 
-        public TableController(ITableService tableService)
-        {
-            _tableService = tableService;
-        }
+    // 🔹 GET: /api/tables/branch/{branchId}
+    [HttpGet("branch/{branchId}")]
+    public async Task<IActionResult> GetTablesByBranchId(int branchId)
+    {
+        var tables = await _tableService.GetTablesByBranchIdAsync(branchId);
+        return Ok(tables);
+    }
 
-        // 🔹 GET: /api/tables/branch/{branchId}
-        [HttpGet("branch/{branchId}")]
-        public async Task<IActionResult> GetTablesByBranch(int branchId)
-        {
-            var tables = await _tableService.GetTablesByBranchIdAsync(branchId);
-            return Ok(tables);
-        }
+    // 🔹 GET: /api/tables/{id}
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetTableById(int id)
+    {
+        var table = await _tableService.GetTableByIdAsync(id);
+        if (table == null) return NotFound();
 
-        // 🔹 POST: /api/tables
-        [HttpPost]
-        [Authorize(Roles = "Admin, RestaurantOwner")]
-        public async Task<IActionResult> AddTable([FromBody] Table table)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+        return Ok(table);
+    }
 
-            await _tableService.AddTableAsync(table);
-            return CreatedAtAction(nameof(GetTablesByBranch), new { branchId = table.BranchId }, table);
-        }
+    // 🔹 POST: /api/tables
+    [HttpPost]
+    public async Task<IActionResult> AddTable([FromBody] CreateTableDto tableDto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        // 🔹 DELETE: /api/tables/{id}
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin, RestaurantOwner")]
-        public async Task<IActionResult> DeleteTable(int id)
-        {
-            await _tableService.DeleteTableAsync(id);
-            return NoContent();
-        }
+        await _tableService.AddTableAsync(tableDto);
+        return Ok(new { message = "Table added successfully." });
+    }
+
+    // 🔹 DELETE: /api/tables/{id}
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteTable(int id)
+    {
+        var deleted = await _tableService.DeleteTableAsync(id);
+        if (!deleted) return NotFound();
+
+        return Ok(new { message = "Table deleted successfully." });
     }
 }

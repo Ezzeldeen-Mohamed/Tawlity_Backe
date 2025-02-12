@@ -1,49 +1,50 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Tawlity_Backend.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Tawlity_Backend.Dtos;
 using Tawlity_Backend.Services.IService;
 
-namespace Tawlity_Backend.Controllers
+[ApiController]
+[Route("api/branches")]
+public class BranchController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class BranchController : ControllerBase
+    private readonly IBranchService _branchService;
+
+    public BranchController(IBranchService branchService)
     {
-        private readonly IBranchService _branchService;
+        _branchService = branchService;
+    }
 
-        public BranchController(IBranchService branchService)
-        {
-            _branchService = branchService;
-        }
+    // ✅ GET /api/branches/restaurant/{restaurantId}
+    [HttpGet("restaurant/{restaurantId}")]
+    public async Task<IActionResult> GetBranchesByRestaurant(int restaurantId)
+    {
+        var branches = await _branchService.GetBranchesByRestaurantIdAsync(restaurantId);
+        return Ok(branches);
+    }
 
-        // 🔹 GET: /api/branches/restaurant/{id}
-        [HttpGet("restaurant/{id}")]
-        public async Task<IActionResult> GetBranchesByRestaurant(int id)
-        {
-            var branches = await _branchService.GetBranchesByRestaurantIdAsync(id);
-            return Ok(branches);
-        }
+    // ✅ GET /api/branches/{id}
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetBranchById(int id)
+    {
+        var branch = await _branchService.GetBranchByIdAsync(id);
+        if (branch == null) return NotFound();
+        return Ok(branch);
+    }
 
-        // 🔹 POST: /api/branches
-        [HttpPost]
-        [Authorize(Roles = "Admin, RestaurantOwner")]
-        public async Task<IActionResult> AddBranch([FromBody] Branch branch)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+    // ✅ POST /api/branches
+    [HttpPost]
+    public async Task<IActionResult> AddBranch([FromBody] CreateBranchDto branchDto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            await _branchService.AddBranchAsync(branch);
-            return CreatedAtAction(nameof(GetBranchesByRestaurant), new { id = branch.RestaurantId }, branch);
-        }
+        await _branchService.AddBranchAsync(branchDto);
+        return CreatedAtAction(nameof(GetBranchById), new { id = branchDto.RestaurantId }, branchDto);
+    }
 
-        // DELETE: /api/branches/{id}
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin, RestaurantOwner")]
-        public async Task<IActionResult> DeleteBranch(int id)
-        {
-            await _branchService.DeleteBranchAsync(id);
-            return NoContent();
-        }
-
+    // ✅ DELETE /api/branches/{id}
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteBranch(int id)
+    {
+        await _branchService.DeleteBranchAsync(id);
+        return NoContent();
     }
 }

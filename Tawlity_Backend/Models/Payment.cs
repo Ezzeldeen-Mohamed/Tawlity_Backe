@@ -13,10 +13,16 @@ namespace Tawlity_Backend.Models
         public decimal Amount { get; set; }
 
         [Required]
-        public string ?TransactionId { get; set; } // PayPal/Stripe ID
+        public string PaymentMethod { get; set; } // "Stripe" or "PayPal"
 
         [Required]
-        public DateTime PaymentDate { get; set; }
+        public string TransactionId { get; set; } // From Stripe/PayPal
+
+        [Required]
+        public string Status { get; set; } // "Completed", "Failed", etc.
+
+        [Required]
+        public DateTime PaymentDate { get; set; } = DateTime.UtcNow;
 
         // Relationships
         [ForeignKey("User")]

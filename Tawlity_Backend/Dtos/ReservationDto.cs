@@ -9,6 +9,8 @@ namespace Tawlity_Backend.Dtos
         public TimeOnly ReservationTime { get; set; }
         public int PeopleCount { get; set; }
         public Reservation_Status Status { get; set; } // Enum for status
+        public List<OrderItemDto> OrderItems { get; set; } = new List<OrderItemDto>(); 
+
     }
     public class UpdateReservationDto
     {
@@ -16,6 +18,8 @@ namespace Tawlity_Backend.Dtos
         public TimeOnly ReservationTime { get; set; }
         public int PeopleCount { get; set; }
         public Reservation_Status Status { get; set; } // Enum for status
+        public List<OrderItemDto> OrderItems { get; set; } = new List<OrderItemDto>(); // ✅ Used Here
+
     }
     public class ReservationResponseDto
     {
@@ -28,6 +32,7 @@ namespace Tawlity_Backend.Dtos
         public TimeOnly ReservationTime { get; set; }
         public int PeopleCount { get; set; }
         public string Status { get; set; }
+        public List<OrderItemDto> OrderItems { get; set; } = new List<OrderItemDto>(); // ✅ Used Here
     }
 
 
