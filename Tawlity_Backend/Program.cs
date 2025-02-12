@@ -7,6 +7,8 @@ using System.Security.Claims;
 using System.Text;
 using Tawlity.Core.Enums;
 using Tawlity_Backend.Data;
+using Tawlity_Backend.Dtos;
+using Tawlity_Backend.Models;
 using Tawlity_Backend.Repositories.Interface;
 using Tawlity_Backend.Repositories.Repositories;
 using Tawlity_Backend.Services;
@@ -125,6 +127,20 @@ builder.Services.AddAuthorization(options =>
                    roleClaim.Value == Employee_Role.RestaurantOwner.ToString();
         }));
 });
+
+var mapperConfig = new MapperConfiguration(cfg =>
+{
+    cfg.CreateMap<Reservation, ReservationResponseDto>()
+        .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.EmployeeName))
+        .ForMember(dest => dest.RestaurantName, opt => opt.MapFrom(src => src.Table.Branch.Restaurant.Name));
+
+    cfg.CreateMap<ReservationDto, Reservation>();
+    cfg.CreateMap<UpdateReservationDto, Reservation>();
+});
+
+var mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+
 
 var app = builder.Build();
 

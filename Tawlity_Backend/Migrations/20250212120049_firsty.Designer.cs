@@ -12,8 +12,8 @@ using Tawlity_Backend.Data;
 namespace Tawlity_Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250211222142_AddReservationStatusAndBranch")]
-    partial class AddReservationStatusAndBranch
+    [Migration("20250212120049_firsty")]
+    partial class firsty
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
