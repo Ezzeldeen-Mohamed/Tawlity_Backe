@@ -20,6 +20,9 @@ namespace Tawlity_Backend.Models
 
         [ForeignKey("Table")]
         public int? TableId { get; set; }
-        public virtual Table ?Table { get; set; }
+        public virtual Table ?Table { get; set; }       
+        [ForeignKey("User")]
+        public int? UserId { get; set; }
+        public virtual User ?User { get; set; }
     }
 }

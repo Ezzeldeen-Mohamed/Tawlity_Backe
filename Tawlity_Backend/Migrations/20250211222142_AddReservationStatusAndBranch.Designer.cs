@@ -12,8 +12,8 @@ using Tawlity_Backend.Data;
 namespace Tawlity_Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250211130515_first")]
-    partial class first
+    [Migration("20250211222142_AddReservationStatusAndBranch")]
+    partial class AddReservationStatusAndBranch
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace Tawlity_Backend.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CommunityPostTag", b =>
+                {
+                    b.Property<int>("CommunityPostsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CommunityPostsId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("CommunityPostTag");
+                });
 
             modelBuilder.Entity("DietaryTagMenuItem", b =>
                 {
@@ -293,6 +308,9 @@ namespace Tawlity_Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RestaurantId");
@@ -300,6 +318,10 @@ namespace Tawlity_Backend.Migrations
                     b.HasIndex("TableId")
                         .IsUnique()
                         .HasFilter("[TableId] IS NOT NULL");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Images");
                 });
@@ -450,21 +472,6 @@ namespace Tawlity_Backend.Migrations
                     b.ToTable("Payments");
                 });
 
-            modelBuilder.Entity("Tawlity_Backend.Models.PostTag", b =>
-                {
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TagId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PostId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("PostTags");
-                });
-
             modelBuilder.Entity("Tawlity_Backend.Models.PricingPlan", b =>
                 {
                     b.Property<int>("Id")
@@ -541,15 +548,20 @@ namespace Tawlity_Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
                     b.Property<int>("PeopleCount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ReservationDateTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("ReservationDate")
+                        .HasColumnType("date");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<TimeOnly>("ReservationTime")
+                        .HasColumnType("time");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<int>("TableId")
                         .HasColumnType("int");
@@ -558,6 +570,8 @@ namespace Tawlity_Backend.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
 
                     b.HasIndex("TableId");
 
@@ -802,6 +816,21 @@ namespace Tawlity_Backend.Migrations
                         });
                 });
 
+            modelBuilder.Entity("CommunityPostTag", b =>
+                {
+                    b.HasOne("Tawlity_Backend.Models.CommunityPost", null)
+                        .WithMany()
+                        .HasForeignKey("CommunityPostsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Tawlity_Backend.Models.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DietaryTagMenuItem", b =>
                 {
                     b.HasOne("Tawlity_Backend.Models.DietaryTag", null)
@@ -922,7 +951,7 @@ namespace Tawlity_Backend.Migrations
             modelBuilder.Entity("Tawlity_Backend.Models.FeaturedRestaurant", b =>
                 {
                     b.HasOne("Tawlity_Backend.Models.PricingPlan", "PricingPlan")
-                        .WithMany()
+                        .WithMany("FeaturedRestaurants")
                         .HasForeignKey("PlanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -948,9 +977,15 @@ namespace Tawlity_Backend.Migrations
                         .WithOne("Image")
                         .HasForeignKey("Tawlity_Backend.Models.Image", "TableId");
 
+                    b.HasOne("Tawlity_Backend.Models.User", "User")
+                        .WithOne("Image")
+                        .HasForeignKey("Tawlity_Backend.Models.Image", "UserId");
+
                     b.Navigation("Restaurant");
 
                     b.Navigation("Table");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Tawlity_Backend.Models.MenuItem", b =>
@@ -989,7 +1024,7 @@ namespace Tawlity_Backend.Migrations
             modelBuilder.Entity("Tawlity_Backend.Models.OrderItem", b =>
                 {
                     b.HasOne("Tawlity_Backend.Models.MenuItem", "MenuItem")
-                        .WithMany()
+                        .WithMany("OrderItems")
                         .HasForeignKey("MenuItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1008,7 +1043,7 @@ namespace Tawlity_Backend.Migrations
             modelBuilder.Entity("Tawlity_Backend.Models.Payment", b =>
                 {
                     b.HasOne("Tawlity_Backend.Models.Restaurant", "Restaurant")
-                        .WithMany()
+                        .WithMany("Payments")
                         .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1024,25 +1059,6 @@ namespace Tawlity_Backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Tawlity_Backend.Models.PostTag", b =>
-                {
-                    b.HasOne("Tawlity_Backend.Models.CommunityPost", "Post")
-                        .WithMany("Tags")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Tawlity_Backend.Models.Tag", "Tag")
-                        .WithMany("PostTags")
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-
-                    b.Navigation("Tag");
-                });
-
             modelBuilder.Entity("Tawlity_Backend.Models.Promotion", b =>
                 {
                     b.HasOne("Tawlity_Backend.Models.Restaurant", "Restaurant")
@@ -1056,10 +1072,16 @@ namespace Tawlity_Backend.Migrations
 
             modelBuilder.Entity("Tawlity_Backend.Models.Reservation", b =>
                 {
+                    b.HasOne("Tawlity_Backend.Models.Branch", "Branch")
+                        .WithMany("Reservations")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("Tawlity_Backend.Models.Table", "Table")
                         .WithMany("Reservations")
                         .HasForeignKey("TableId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Tawlity_Backend.Models.User", "User")
@@ -1067,6 +1089,8 @@ namespace Tawlity_Backend.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Branch");
 
                     b.Navigation("Table");
 
@@ -1118,6 +1142,8 @@ namespace Tawlity_Backend.Migrations
                 {
                     b.Navigation("OperatingHours");
 
+                    b.Navigation("Reservations");
+
                     b.Navigation("Tables");
                 });
 
@@ -1129,8 +1155,16 @@ namespace Tawlity_Backend.Migrations
             modelBuilder.Entity("Tawlity_Backend.Models.CommunityPost", b =>
                 {
                     b.Navigation("Comments");
+                });
 
-                    b.Navigation("Tags");
+            modelBuilder.Entity("Tawlity_Backend.Models.MenuItem", b =>
+                {
+                    b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("Tawlity_Backend.Models.PricingPlan", b =>
+                {
+                    b.Navigation("FeaturedRestaurants");
                 });
 
             modelBuilder.Entity("Tawlity_Backend.Models.Reservation", b =>
@@ -1148,6 +1182,8 @@ namespace Tawlity_Backend.Migrations
 
                     b.Navigation("MenuItems");
 
+                    b.Navigation("Payments");
+
                     b.Navigation("Promotions");
 
                     b.Navigation("Reviews");
@@ -1160,11 +1196,6 @@ namespace Tawlity_Backend.Migrations
                     b.Navigation("Reservations");
                 });
 
-            modelBuilder.Entity("Tawlity_Backend.Models.Tag", b =>
-                {
-                    b.Navigation("PostTags");
-                });
-
             modelBuilder.Entity("Tawlity_Backend.Models.User", b =>
                 {
                     b.Navigation("CommentLikes");
@@ -1172,6 +1203,8 @@ namespace Tawlity_Backend.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Favorites");
+
+                    b.Navigation("Image");
 
                     b.Navigation("Notifications");
 

@@ -127,23 +127,21 @@ namespace Tawlity_Backend.Data
                 .WithMany(r => r.FeaturedPlans)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // PostTag (Many-to-Many)
-            modelBuilder.Entity<PostTag>()
-                .HasKey(pt => new { pt.PostId, pt.TagId });
-
-            modelBuilder.Entity<PostTag>()
-                .HasOne(pt => pt.Post)
-                .WithMany(p => p.Tags)
-                .HasForeignKey(pt => pt.PostId);
-
-            modelBuilder.Entity<PostTag>()
-                .HasOne(pt => pt.Tag)
-                .WithMany(t => t.PostTags)
-                .HasForeignKey(pt => pt.TagId);
-
             // Comment Likes (Many-to-Many)
             modelBuilder.Entity<CommentLike>()
                 .HasKey(cl => new { cl.UserId, cl.CommentId });
+
+            modelBuilder.Entity<Reservation>()
+                .HasOne(r => r.Table)
+                .WithMany(t => t.Reservations)
+                .HasForeignKey(r => r.TableId)
+                .OnDelete(DeleteBehavior.NoAction); // Prevent cascading delete
+
+            modelBuilder.Entity<Reservation>()
+                .HasOne(r => r.Branch)
+                .WithMany(b => b.Reservations)
+                .HasForeignKey(r => r.BranchId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
 
         // Add DbSet for ALL models
@@ -165,7 +163,6 @@ namespace Tawlity_Backend.Data
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<OperatingHours> OperatingHours { get; set; }
-        public DbSet<PostTag> PostTags { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<CommentLike> CommentLikes { get; set; }
         public DbSet<DietaryTag> DietaryTags { get; set; }

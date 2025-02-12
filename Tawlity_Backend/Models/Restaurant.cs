@@ -24,8 +24,8 @@ namespace Tawlity_Backend.Models
             public double Longitude { get; set; }
 
         // Relationships
-        public virtual ICollection<Image> Images { get; set; }
-
+            public virtual ICollection<Image> Images { get; set; }=new HashSet<Image>();
+            public virtual ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();    
             public virtual ICollection<Branch> Branches { get; set; } = new HashSet<Branch>();
             public virtual ICollection<MenuItem> MenuItems { get; set; } = new HashSet<MenuItem>();
             public virtual ICollection<Promotion> Promotions { get; set; } = new HashSet<Promotion>();

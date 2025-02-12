@@ -19,5 +19,8 @@ namespace Tawlity_Backend.Models
 
         [StringLength(500)]
         public string ?Features { get; set; } // e.g., "Top placement in search results"
+
+        public virtual ICollection<FeaturedRestaurant> FeaturedRestaurants { get; set; } = new HashSet<FeaturedRestaurant>();
+
     }
 }

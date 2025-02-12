@@ -55,12 +55,19 @@ builder.Services.AddDbContext<AppDbContext>(x =>
 builder.Services.AddScoped<Login_IRepo, Login_Repo>();
 builder.Services.AddScoped<Login_IService, Login_Service>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IBranchRepository, BranchRepository>();
+builder.Services.AddScoped<IBranchService, BranchService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<EmailService>();
 builder.Services.Configure<EmailService>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
 builder.Services.AddAutoMapper(typeof(IMapper));
+builder.Services.AddScoped<ITableRepository, TableRepository>();
+builder.Services.AddScoped<ITableService, TableService>();
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
+
 
 
 

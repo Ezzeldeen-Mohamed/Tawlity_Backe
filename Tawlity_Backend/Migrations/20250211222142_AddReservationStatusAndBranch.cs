@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Tawlity_Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class first : Migration
+    public partial class AddReservationStatusAndBranch : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -419,24 +419,24 @@ namespace Tawlity_Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PostTags",
+                name: "CommunityPostTag",
                 columns: table => new
                 {
-                    PostId = table.Column<int>(type: "int", nullable: false),
-                    TagId = table.Column<int>(type: "int", nullable: false)
+                    CommunityPostsId = table.Column<int>(type: "int", nullable: false),
+                    TagsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PostTags", x => new { x.PostId, x.TagId });
+                    table.PrimaryKey("PK_CommunityPostTag", x => new { x.CommunityPostsId, x.TagsId });
                     table.ForeignKey(
-                        name: "FK_PostTags_CommunityPosts_PostId",
-                        column: x => x.PostId,
+                        name: "FK_CommunityPostTag_CommunityPosts_CommunityPostsId",
+                        column: x => x.CommunityPostsId,
                         principalTable: "CommunityPosts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PostTags_Tags_TagId",
-                        column: x => x.TagId,
+                        name: "FK_CommunityPostTag_Tags_TagsId",
+                        column: x => x.TagsId,
                         principalTable: "Tags",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -507,11 +507,17 @@ namespace Tawlity_Backend.Migrations
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RestaurantId = table.Column<int>(type: "int", nullable: true),
-                    TableId = table.Column<int>(type: "int", nullable: true)
+                    TableId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Images", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Images_Employees_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Employees",
+                        principalColumn: "EmployeeId");
                     table.ForeignKey(
                         name: "FK_Images_Restaurants_RestaurantId",
                         column: x => x.RestaurantId,
@@ -530,15 +536,22 @@ namespace Tawlity_Backend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ReservationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReservationDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    ReservationTime = table.Column<TimeOnly>(type: "time", nullable: false),
                     PeopleCount = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    TableId = table.Column<int>(type: "int", nullable: false)
+                    TableId = table.Column<int>(type: "int", nullable: false),
+                    BranchId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reservations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Branches_BranchId",
+                        column: x => x.BranchId,
+                        principalTable: "Branches",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Reservations_Employees_UserId",
                         column: x => x.UserId,
@@ -549,8 +562,7 @@ namespace Tawlity_Backend.Migrations
                         name: "FK_Reservations_Tables_TableId",
                         column: x => x.TableId,
                         principalTable: "Tables",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -656,6 +668,11 @@ namespace Tawlity_Backend.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CommunityPostTag_TagsId",
+                table: "CommunityPostTag",
+                column: "TagsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DietaryTagMenuItem_MenuItemsId",
                 table: "DietaryTagMenuItem",
                 column: "MenuItemsId");
@@ -701,6 +718,13 @@ namespace Tawlity_Backend.Migrations
                 filter: "[TableId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Images_UserId",
+                table: "Images",
+                column: "UserId",
+                unique: true,
+                filter: "[UserId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MenuItems_RestaurantId",
                 table: "MenuItems",
                 column: "RestaurantId");
@@ -737,14 +761,14 @@ namespace Tawlity_Backend.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostTags_TagId",
-                table: "PostTags",
-                column: "TagId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Promotions_RestaurantId",
                 table: "Promotions",
                 column: "RestaurantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_BranchId",
+                table: "Reservations",
+                column: "BranchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_TableId",
@@ -788,6 +812,9 @@ namespace Tawlity_Backend.Migrations
                 name: "CommentLikes");
 
             migrationBuilder.DropTable(
+                name: "CommunityPostTag");
+
+            migrationBuilder.DropTable(
                 name: "DietaryTagMenuItem");
 
             migrationBuilder.DropTable(
@@ -812,9 +839,6 @@ namespace Tawlity_Backend.Migrations
                 name: "Payments");
 
             migrationBuilder.DropTable(
-                name: "PostTags");
-
-            migrationBuilder.DropTable(
                 name: "Promotions");
 
             migrationBuilder.DropTable(
@@ -827,6 +851,9 @@ namespace Tawlity_Backend.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
+                name: "Tags");
+
+            migrationBuilder.DropTable(
                 name: "DietaryTags");
 
             migrationBuilder.DropTable(
@@ -837,9 +864,6 @@ namespace Tawlity_Backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Reservations");
-
-            migrationBuilder.DropTable(
-                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "CommunityPosts");

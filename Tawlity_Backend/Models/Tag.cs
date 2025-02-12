@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Tawlity_Backend.Models
 {
@@ -12,6 +13,7 @@ namespace Tawlity_Backend.Models
         public string ?Name { get; set; }
 
         // Relationships
-        public virtual ICollection<PostTag> PostTags { get; set; } = new HashSet<PostTag>();
+        public virtual ICollection<CommunityPost> CommunityPosts { get; set; } = new HashSet<CommunityPost>();
+
     }
 }

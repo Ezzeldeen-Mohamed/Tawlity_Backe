@@ -24,6 +24,7 @@ namespace Tawlity_Backend.Models
         public virtual Restaurant Restaurant { get; set; } = new Restaurant();
 
         public virtual ICollection<Table> Tables { get; set; }=new HashSet<Table>();
+        public virtual ICollection<Reservation> Reservations { get; set; }=new HashSet<Reservation>();
         public virtual ICollection<OperatingHours> OperatingHours { get; set; } = new HashSet<OperatingHours>();
     }
 }

@@ -40,7 +40,7 @@ namespace Tawlity_Backend.Models
         //public virtual Role ?Role { get; set; }
 
         // Relationships
-
+        public virtual Image? Image { get; set; }
         public virtual ICollection<Reservation> Reservations { get; set; } = new HashSet<Reservation>();
         public virtual ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
         public virtual ICollection<Review> Reviews { get; set; } = new HashSet<Review>();

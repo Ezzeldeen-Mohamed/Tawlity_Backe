@@ -28,6 +28,7 @@ namespace Tawlity_Backend.Models
         public virtual Restaurant ?Restaurant { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
-        public virtual ICollection<PostTag> Tags { get; set; } = new HashSet<PostTag>();
+        public virtual ICollection<Tag> Tags { get; set; } = new HashSet<Tag>();
+        
     }
 }

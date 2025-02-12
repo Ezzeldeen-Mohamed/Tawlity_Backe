@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Tawlity_Backend.Data.Enums;
 
 namespace Tawlity_Backend.Models
 {
@@ -9,14 +10,15 @@ namespace Tawlity_Backend.Models
         public int Id { get; set; }
 
         [Required]
-        public DateTime ReservationDateTime { get; set; }
-
+        public DateOnly ReservationDate{ get; set; }   //make here is date time and add new parameter data only 
+        public TimeOnly ReservationTime { get; set; }   
+     
         [Required]
-        [Range(1, 20)]
+        [Range(1, 2000)]
         public int PeopleCount { get; set; }
 
         [Required]
-        public string ?Status { get; set; } // "Pending", "Confirmed", "Cancelled"
+        public Reservation_Status? Status { get; set; } 
 
         // Relationships
         public int UserId { get; set; }
@@ -25,7 +27,11 @@ namespace Tawlity_Backend.Models
 
         [ForeignKey("Table")]
         public int TableId { get; set; }
-        public virtual Table ?Table { get; set; }
+        public virtual Table ?Table { get; set; } 
+
+        [ForeignKey("Branch")]
+        public int BranchId { get; set; }  // New Relationship
+        public virtual Branch? Branch { get; set; }
 
         public virtual ICollection<OrderItem> OrderItems { get; set; }=new HashSet<OrderItem>();
     }
