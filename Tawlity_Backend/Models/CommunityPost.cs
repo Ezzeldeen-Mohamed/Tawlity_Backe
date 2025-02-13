@@ -17,6 +17,8 @@ namespace Tawlity_Backend.Models
         public string ?Content { get; set; }
 
         public int Likes { get; set; }
+        [Required]
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Relationships
         [ForeignKey("User")]

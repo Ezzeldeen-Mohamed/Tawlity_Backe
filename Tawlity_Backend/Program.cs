@@ -64,6 +64,8 @@ builder.Services.AddSingleton<EmailService>();
 builder.Services.Configure<EmailService>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddAutoMapper(typeof(IMapper));
 builder.Services.AddScoped<ITableRepository, TableRepository>();
 builder.Services.AddScoped<ITableService, TableService>();
@@ -73,12 +75,21 @@ builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<IMenuRepository, MenuRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
-
+builder.Services.AddScoped<ICommunityPostRepository, CommunityPostRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<ICommentRepository,CommentRepository>();
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
 
-
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole(nameof(Employee_Role.Admin)));
+    options.AddPolicy("RestaurantOwnerOnly", policy => policy.RequireRole(nameof(Employee_Role.RestaurantOwner)));
+});
 
 // Add Authentication with JWT Bearer   
 builder.Services.AddAuthentication("Bearer")
@@ -133,6 +144,11 @@ builder.Services.AddAuthorization(options =>
             return roleClaim.Value == Employee_Role.Admin.ToString() ||
                    roleClaim.Value == Employee_Role.RestaurantOwner.ToString();
         }));
+});
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole(nameof(Employee_Role.Admin)));
+    options.AddPolicy("RestaurantOwnerOnly", policy => policy.RequireRole(nameof(Employee_Role.RestaurantOwner)));
 });
 
 var mapperConfig = new MapperConfiguration(cfg =>

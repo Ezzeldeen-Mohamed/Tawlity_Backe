@@ -14,6 +14,8 @@ namespace Tawlity_Backend.Models
 
         [StringLength(1000)]
         public string ?Comment { get; set; }
+        [Required]
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Relationships
         public int UserId { get; set; }
