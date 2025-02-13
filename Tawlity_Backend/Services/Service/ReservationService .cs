@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Tawlity_Backend.Dtos;
 using Tawlity_Backend.Models;
 using Tawlity_Backend.Repositories.Interface;
@@ -39,6 +40,7 @@ public class ReservationService : IReservationService
     {
         var reservation = new Reservation
         {
+            BranchId= reservationDto.BranchId,
             UserId = userId, // Assign the logged-in user ID
             TableId = reservationDto.TableId,
             ReservationDate = reservationDto.ReservationDate,

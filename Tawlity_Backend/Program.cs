@@ -186,3 +186,9 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+
+// eTicket logoin data
+//admin@etickets.com
+//Coding@1234?

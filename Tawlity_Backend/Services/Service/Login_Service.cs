@@ -24,7 +24,7 @@ namespace Tawlity_Backend.Services.Service
             _config = config;
             _emailService = emailService;
         }
-
+ 
         public async Task<string> LoginAsync(LoginDto loginDto)
         {
             // Validate credentials

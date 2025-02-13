@@ -4,6 +4,7 @@ namespace Tawlity_Backend.Dtos
 {
     public class ReservationDto
     {
+        public int BranchId { get; set; }
         public int TableId { get; set; }
         public DateOnly ReservationDate { get; set; }
         public TimeOnly ReservationTime { get; set; }
