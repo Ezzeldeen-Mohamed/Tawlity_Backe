@@ -42,7 +42,7 @@ namespace Tawlity_Backend.Repositories.Repositories
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public async Task AddReservationAsync(Reservation reservation)
+        public async void AddReservationAsync(Reservation reservation)
         {
             await _context.Reservations.AddAsync(reservation);
             await _context.SaveChangesAsync();

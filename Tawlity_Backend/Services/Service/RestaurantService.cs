@@ -24,16 +24,32 @@ namespace Tawlity_Backend.Services.Service
             return _mapper.Map<IEnumerable<RestaurantDto>>(restaurants);
         }
 
-        public async Task<RestaurantDto?> GetRestaurantByIdAsync(int id)
+        public async Task<RestaurantDto> GetRestaurantByIdAsync(int id)
         {
             var restaurant = await _repository.GetByIdAsync(id);
             return _mapper.Map<RestaurantDto>(restaurant);
         }
 
-        public async Task<RestaurantDto?> GetRestaurantByNameAsync(string name)
+        public void CreateRestaurantAsync(CreateRestaurantDto dto)
         {
-            var restaurant = await _repository.GetByNameAsync(name);
-            return _mapper.Map<RestaurantDto>(restaurant);
+            if (dto == null)
+            {
+                throw new NullReferenceException("Enter data");
+            }
+                _repository.Createrestaurant(dto);
+        }
+
+
+        public async Task UpdateRestaurantAsync(int id, UpdateRestaurantDto dto)
+        {
+            var restaurant = await _repository.GetByIdAsync(id);
+            _mapper.Map(dto, restaurant);
+            await _repository.UpdateAsync(restaurant);
+        }
+
+        public async Task DeleteRestaurantAsync(int id)
+        {
+            await _repository.DeleteAsync(id);
         }
 
         public async Task<IEnumerable<RestaurantDto>> SearchRestaurantsAsync(string query)
@@ -42,33 +58,10 @@ namespace Tawlity_Backend.Services.Service
             return _mapper.Map<IEnumerable<RestaurantDto>>(restaurants);
         }
 
-        public async Task<IEnumerable<RestaurantDto>> GetNearbyRestaurantsAsync(double lat, double lon, double radiusKm)
+        public async Task<IEnumerable<RestaurantDto>> GetNearbyRestaurantsAsync(double latitude, double longitude, double radiusKm)
         {
-            var restaurants = await _repository.GetNearbyAsync(lat, lon, radiusKm);
+            var restaurants = await _repository.GetNearbyAsync(latitude, longitude, radiusKm);
             return _mapper.Map<IEnumerable<RestaurantDto>>(restaurants);
-        }
-
-        public async Task AddRestaurantAsync(RestaurantDto dto)
-        {
-            var restaurant = _mapper.Map<Restaurant>(dto);
-            await _repository.AddAsync(restaurant);
-        }
-
-        public async Task UpdateRestaurantAsync(int id, RestaurantDto dto)
-        {
-            var restaurant = await _repository.GetByIdAsync(id);
-            if (restaurant == null) throw new KeyNotFoundException("Restaurant not found");
-
-            _mapper.Map(dto, restaurant);
-            await _repository.UpdateAsync(restaurant);
-        }
-
-        public async Task DeleteRestaurantAsync(int id)
-        {
-            var restaurant = await _repository.GetByIdAsync(id);
-            if (restaurant == null) throw new KeyNotFoundException("Restaurant not found");
-
-            await _repository.DeleteAsync(restaurant);
         }
     }
 }

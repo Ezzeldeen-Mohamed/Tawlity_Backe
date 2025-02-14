@@ -36,22 +36,32 @@ public class ReservationService : IReservationService
         return _mapper.Map<ReservationResponseDto>(reservation);
     }
 
-    public async Task AddReservationAsync(int userId, ReservationDto reservationDto)
+    void IReservationService.AddReservationAsync(int userId, ReservationDto reservationDto)
     {
-        var reservation = new Reservation
+            var reservation = new Reservation
+            {
+                RestaurantId = reservationDto.RestaurantId,
+                UserId = userId, // Assign the logged-in user ID
+                TableId = reservationDto.TableId,
+                ReservationDate = reservationDto.ReservationDate,
+                ReservationTime = reservationDto.ReservationTime,
+                PeopleCount = reservationDto.PeopleCount,
+                Status = reservationDto.Status,
+                OrderItems = reservationDto.OrderItems.Select(x => new OrderItem
+                {
+                    MenuItem = new MenuItem
+                    {
+                        Price = x.Price,
+                        Name = x.Name,
+                    }
+                }).ToList()
+            };
+        if (reservation == null)
         {
-            BranchId= reservationDto.BranchId,
-            UserId = userId, // Assign the logged-in user ID
-            TableId = reservationDto.TableId,
-            ReservationDate = reservationDto.ReservationDate,
-            ReservationTime = reservationDto.ReservationTime,
-            PeopleCount = reservationDto.PeopleCount,
-            Status = reservationDto.Status
-        };
-
-        await _reservationRepository.AddReservationAsync(reservation);
+            throw new Exception("Enter data");
+        }
+        _reservationRepository.AddReservationAsync(reservation);
     }
-
     public async Task<bool> UpdateReservationAsync(int id, UpdateReservationDto updatedReservationDto)
     {
         var existingReservation = await _reservationRepository.GetReservationByIdAsync(id);
@@ -70,4 +80,5 @@ public class ReservationService : IReservationService
         await _reservationRepository.DeleteReservationAsync(id);
         return true;
     }
+
 }

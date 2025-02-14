@@ -9,6 +9,6 @@ namespace Tawlity.Core.Enums
     public enum Employee_Gender
     {
         male=0,
-        female=1
+        female
     }
 }

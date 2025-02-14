@@ -63,14 +63,19 @@ public class ReservationController : ControllerBase
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-
-        // Extract the User ID from the JWT token
-        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-        if (userId == 0)
-            return Unauthorized("Invalid user token");
-
-        // Pass user ID to the service
-        await _reservationService.AddReservationAsync(userId, reservationDto);
-        return Ok(new { message = "Reservation created successfully" });
+        try
+        {
+            // Extract the User ID from the JWT token
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            if (userId == 0)
+                return Unauthorized("Invalid user token");
+            // Pass user ID to the service
+            _reservationService.AddReservationAsync(userId, reservationDto);
+            return Ok(new { message = "Reservation created successfully" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex);
+        }
     }
 }

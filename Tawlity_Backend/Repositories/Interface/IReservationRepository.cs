@@ -7,7 +7,7 @@ namespace Tawlity_Backend.Repositories.Interface
         Task<IEnumerable<Reservation>> GetAllReservationsAsync();
         Task<IEnumerable<Reservation>> GetReservationsByUserIdAsync(int userId);
         Task<Reservation?> GetReservationByIdAsync(int id);
-        Task AddReservationAsync(Reservation reservation);
+        void AddReservationAsync(Reservation reservation);
         Task UpdateReservationAsync(Reservation reservation);
         Task DeleteReservationAsync(int id);
     }

@@ -4,14 +4,14 @@ namespace Tawlity_Backend.Dtos
 {
     public class ReservationDto
     {
-        public int BranchId { get; set; }
+        public int RestaurantId { get; set; }
         public int TableId { get; set; }
         public DateOnly ReservationDate { get; set; }
         public TimeOnly ReservationTime { get; set; }
         public int PeopleCount { get; set; }
-        public Reservation_Status Status { get; set; } // Enum for status
-        public List<OrderItemDto> OrderItems { get; set; } = new List<OrderItemDto>(); 
-
+       public Reservation_Status Status { get; set; } // Enum for status
+        public List<MenuItemD> OrderItems { get; set; } = new List<MenuItemD>();
+        //list of menu items  for every items have list of items 
     }
     public class UpdateReservationDto
     {

@@ -24,7 +24,7 @@ namespace Tawlity_Backend.Dtos
         public string EmployeeConfirmPassword { get; set; } = string.Empty;
         [CreditCard(ErrorMessage = "Invalid credit card number")]
         public string EmployeeCreditCard { get; set; } = string.Empty;
-        public Employee_Role Employee_Role { get; set; }
+       // public Employee_Role Employee_Role { get; set; }
     }
 
 }

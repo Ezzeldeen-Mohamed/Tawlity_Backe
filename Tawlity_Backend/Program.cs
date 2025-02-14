@@ -67,6 +67,7 @@ builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddAutoMapper(typeof(IMapper));
+builder.Services.AddAutoMapper(typeof(BranchProfile));
 builder.Services.AddScoped<ITableRepository, TableRepository>();
 builder.Services.AddScoped<ITableService, TableService>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
@@ -84,6 +85,10 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+});
 
 builder.Services.AddAuthorization(options =>
 {

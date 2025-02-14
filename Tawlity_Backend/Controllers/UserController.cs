@@ -18,7 +18,8 @@ namespace Tawlity_Backend.Controllers
             _userService = userService;
         }
         [HttpGet]
-        [Authorize(Roles = nameof(Employee_Role.Admin))] 
+        [Authorize(Roles = nameof(Employee_Role.Admin))]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _userService.GetAllUsersAsync();

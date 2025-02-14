@@ -62,7 +62,7 @@ namespace Tawlity_Backend.Services.Service
                 EmployeeCreditCard = registerDto.EmployeeCreditCard,
                 EmployeeGender = registerDto.EmployeeGender,
                 EmployeePhone = registerDto.EmployeePhone,
-                Employee_Role = registerDto.Employee_Role
+               // Employee_Role = registerDto.Employee_Role
             };
 
             // Save the employee to the database
@@ -87,7 +87,6 @@ namespace Tawlity_Backend.Services.Service
             {
                 new Claim(ClaimTypes.NameIdentifier, employee.EmployeeId.ToString()), // User ID is added
                 new Claim(ClaimTypes.Name, employee.EmployeeName),
-                new Claim(ClaimTypes.NameIdentifier, employee.EmployeeId.ToString()),
                 new Claim(ClaimTypes.Role, employee.Employee_Role.ToString())
             };
 

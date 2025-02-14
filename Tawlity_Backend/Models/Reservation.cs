@@ -33,6 +33,10 @@ namespace Tawlity_Backend.Models
         public int BranchId { get; set; }  // New Relationship
         public virtual Branch? Branch { get; set; }
 
+        [ForeignKey("Restaurant")]
+        public int RestaurantId { get; set; }  // New Relationship
+        public virtual Restaurant? Restaurant { get; set; }
+
         public virtual ICollection<OrderItem> OrderItems { get; set; }=new HashSet<OrderItem>();
     }
 }
