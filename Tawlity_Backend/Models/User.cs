@@ -40,16 +40,16 @@ namespace Tawlity_Backend.Models
         //public virtual Role ?Role { get; set; }
 
         // Relationships
-        public virtual Image? Image { get; set; }
+        [ForeignKey("Restaurant")]
+        public int RestaurantId { get; set; }  // New Relationship
+        public virtual Restaurant? Restaurant { get; set; }
         public virtual ICollection<Reservation> Reservations { get; set; } = new HashSet<Reservation>();
-        public virtual ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
-        public virtual ICollection<Review> Reviews { get; set; } = new HashSet<Review>();
-        public virtual ICollection<CommunityPost> Posts { get; set; } = new HashSet<CommunityPost>();
-        public virtual ICollection<Notification> Notifications { get; set; } = new HashSet<Notification>();
         public virtual ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();
-        public virtual Subscription ?Subscription { get; set; }
-        public virtual ICollection<Favorite> Favorites { get; set; } = new HashSet<Favorite>();
-        public virtual ICollection<CommentLike> CommentLikes { get; set; } = new HashSet<CommentLike>();
 
     }
 }
+
+
+/*
+    do this end points for me do dtos and service and repo and controller don't use mapper or mappester and do relation between the nother tables
+ */

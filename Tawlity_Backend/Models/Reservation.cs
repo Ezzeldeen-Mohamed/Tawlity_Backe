@@ -27,11 +27,7 @@ namespace Tawlity_Backend.Models
 
         [ForeignKey("Table")]
         public int TableId { get; set; }
-        public virtual Table ?Table { get; set; } 
-
-        [ForeignKey("Branch")]
-        public int BranchId { get; set; }  // New Relationship
-        public virtual Branch? Branch { get; set; }
+        public virtual Table ?Table { get; set; }
 
         [ForeignKey("Restaurant")]
         public int RestaurantId { get; set; }  // New Relationship

@@ -19,8 +19,8 @@ namespace Tawlity_Backend.Repositories.Repositories
         {
             return await _context.Reservations
                 .Include(r => r.User)
+                .ThenInclude(t => t.Restaurant)
                 .Include(r => r.Table)
-                .ThenInclude(t => t.Branch)
                 .ToListAsync();
         }
 
@@ -29,7 +29,6 @@ namespace Tawlity_Backend.Repositories.Repositories
             return await _context.Reservations
                 .Where(r => r.UserId == userId)
                 .Include(r => r.Table)
-                .ThenInclude(t => t.Branch)
                 .ToListAsync();
         }
 
@@ -38,7 +37,6 @@ namespace Tawlity_Backend.Repositories.Repositories
             return await _context.Reservations
                 .Include(r => r.User)
                 .Include(r => r.Table)
-                .ThenInclude(t => t.Branch)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 

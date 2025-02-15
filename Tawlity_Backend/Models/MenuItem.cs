@@ -24,7 +24,6 @@ namespace Tawlity_Backend.Models
         public int RestaurantId { get; set; }
         public virtual Restaurant ?Restaurant { get; set; }
 
-        public virtual ICollection<DietaryTag> DietaryTags { get; set; }= new HashSet<DietaryTag>();
         public virtual ICollection<OrderItem>  OrderItems { get; set; }= new HashSet<OrderItem>();
         
     }

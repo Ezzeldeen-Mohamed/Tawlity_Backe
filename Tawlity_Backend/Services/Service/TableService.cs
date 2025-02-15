@@ -15,11 +15,6 @@ public class TableService : ITableService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<TableDto>> GetTablesByBranchIdAsync(int branchId)
-    {
-        var tables = await _tableRepository.GetTablesByBranchIdAsync(branchId);
-        return _mapper.Map<IEnumerable<TableDto>>(tables);
-    }
 
     public async Task<TableDto?> GetTableByIdAsync(int tableId)
     {

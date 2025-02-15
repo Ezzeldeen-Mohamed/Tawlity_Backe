@@ -71,27 +71,11 @@ namespace Tawlity_Backend.Data
                     Employee_Role = Employee_Role.Customer
                 });
 
-            // Define composite unique indexes
-            modelBuilder.Entity<Favorite>()
-                .HasIndex(f => new { f.UserId, f.RestaurantId, f.MenuItemId })
-                .IsUnique()
-                .HasFilter("[RestaurantId] IS NOT NULL AND [MenuItemId] IS NOT NULL");
-
-            modelBuilder.Entity<Comment>()
-                .HasOne(c => c.User)
-                .WithMany(u => u.Comments)
-                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<OrderItem>()
                 .HasOne(oi => oi.Reservation)
                 .WithMany(r => r.OrderItems)
                 .HasForeignKey(oi => oi.ReservationId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<CommentLike>()
-                .HasOne(cl => cl.User)
-                .WithMany(u => u.CommentLikes)
-                .HasForeignKey(cl => cl.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Configure other relationships
@@ -100,74 +84,21 @@ namespace Tawlity_Backend.Data
                 .WithMany(u => u.Reservations)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Review>()
-                .HasOne(r => r.User)
-                .WithMany(u => u.Reviews)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<OperatingHours>()
-                .HasIndex(oh => new { oh.BranchId, oh.Day })
-                .IsUnique();
-
-            modelBuilder.Entity<FeaturedRestaurant>()
-                .HasIndex(fr => fr.RestaurantId)
-                .IsUnique();
-            // Spatial Index for Branches (SQL Server)
-            modelBuilder.Entity<Branch>()
-                .HasIndex(b => new { b.Latitude, b.Longitude });
-
-            modelBuilder.Entity<Promotion>()
-                 .HasOne(p => p.Restaurant)
-                 .WithMany(r => r.Promotions)
-                 .OnDelete(DeleteBehavior.Cascade);
-
-            // FeaturedRestaurant -> Restaurant (One-to-One)
-            modelBuilder.Entity<FeaturedRestaurant>()
-                .HasOne(f => f.Restaurant)
-                .WithMany(r => r.FeaturedPlans)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Comment Likes (Many-to-Many)
-            modelBuilder.Entity<CommentLike>()
-                .HasKey(cl => new { cl.UserId, cl.CommentId });
-
             modelBuilder.Entity<Reservation>()
                 .HasOne(r => r.Table)
                 .WithMany(t => t.Reservations)
                 .HasForeignKey(r => r.TableId)
                 .OnDelete(DeleteBehavior.NoAction); // Prevent cascading delete
-
-            modelBuilder.Entity<Reservation>()
-                .HasOne(r => r.Branch)
-                .WithMany(b => b.Reservations)
-                .HasForeignKey(r => r.BranchId)
-                .OnDelete(DeleteBehavior.NoAction);
         }
 
         // Add DbSet for ALL models
      //   public DbSet<Role> Roles { get; set; }
         public DbSet<Restaurant> Restaurants { get; set; }
-        public DbSet<Branch> Branches { get; set; }
-        public DbSet<Analytics> Analytics { get; set; }
         public DbSet<Models.Table> Tables { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<MenuItem> MenuItems { get; set; }
-        public DbSet<Review> Reviews { get; set; }
-        public DbSet<CommunityPost> CommunityPosts { get; set; }
-        public DbSet<Comment> Comments { get; set; }
-        public DbSet<Promotion> Promotions { get; set; }
-        public DbSet<FeaturedRestaurant> FeaturedRestaurants { get; set; }
-        public DbSet<PricingPlan> PricingPlans { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
         public DbSet<Payment> Payments { get; set; }
-        public DbSet<Subscription> Subscriptions { get; set; }
-        public DbSet<Favorite> Favorites { get; set; }
-        public DbSet<OperatingHours> OperatingHours { get; set; }
-        public DbSet<Tag> Tags { get; set; }
-        public DbSet<CommentLike> CommentLikes { get; set; }
-        public DbSet<DietaryTag> DietaryTags { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<Models.Image> Images { get; set; }
         public DbSet<User> Employees { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Tawlity.Core.Enums;
 
 namespace Tawlity_Backend.Models
 {
@@ -24,13 +26,13 @@ namespace Tawlity_Backend.Models
             public double Longitude { get; set; }
 
         // Relationships
-            public virtual ICollection<Image> Images { get; set; }=new HashSet<Image>();
+
+
+            [ForeignKey("User")]
+            public int UserId { get; set; }
+            public virtual User? User { get; set; }
             public virtual ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();    
-            public virtual ICollection<Branch> Branches { get; set; } = new HashSet<Branch>();
             public virtual ICollection<MenuItem> MenuItems { get; set; } = new HashSet<MenuItem>();
-            public virtual ICollection<Promotion> Promotions { get; set; } = new HashSet<Promotion>();
-            public virtual ICollection<Review> Reviews { get; set; } = new HashSet<Review>();
-            public virtual ICollection<FeaturedRestaurant> FeaturedPlans { get; set; } = new HashSet<FeaturedRestaurant>();
         
         }
 }

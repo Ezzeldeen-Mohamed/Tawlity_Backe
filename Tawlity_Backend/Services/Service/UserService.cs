@@ -1,72 +1,122 @@
-﻿using Tawlity_Backend.Dtos;
+﻿using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Tawlity_Backend.Dtos;
+using Tawlity_Backend.Models;
 using Tawlity_Backend.Repositories.Interface;
 using Tawlity_Backend.Services.IService;
 
 namespace Tawlity_Backend.Services.Service
 {
-    public class UserService:IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IConfiguration _config;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IConfiguration config)
         {
             _userRepository = userRepository;
+            _config = config;
         }
 
-        public async Task<List<UserDto>> GetAllUsersAsync()
+        public async Task<IEnumerable<UsersDto>> GetAllUsersAsync()
         {
             var users = await _userRepository.GetAllUsersAsync();
-            return users.Select(u => new UserDto
+            return users.Select(u => new UsersDto
             {
-                Id = u.EmployeeId,
-                Name=u.EmployeeName,
-                Email = u.EmployeeEmail,
-                Role = u.Employee_Role.ToString() // Assuming you have a Role navigation property
-            }).ToList();
+                EmployeeId = u.EmployeeId,
+                EmployeeName = u.EmployeeName,
+                EmployeeGender = u.EmployeeGender,
+                EmployeePhone = u.EmployeePhone,
+                EmployeeEmail = u.EmployeeEmail,
+                EmployeeCity = u.EmployeeCity,
+                Employee_Role = u.Employee_Role,
+                EmployeeCreditCard = u.EmployeeCreditCard
+            });
         }
 
-        
-        public async Task<UserDto> GetUserByIdAsync(int id)
+        private string GenerateJwtToken(User employee)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, employee.EmployeeId.ToString()), // User ID is added
+                new Claim(ClaimTypes.Name, employee.EmployeeName),
+                new Claim(ClaimTypes.Role, employee.Employee_Role.ToString())
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(double.Parse(_config["Jwt:ExpiresInMinutes"]!)),
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<UsersDto?> GetUserByIdAsync(int id)
         {
             var user = await _userRepository.GetUserByIdAsync(id);
-            if (user == null) return null;
-
-            return new UserDto
+            return user == null ? null : new UsersDto
             {
-                Id = user.EmployeeId,
-                Name = $"{user.EmployeeName}",
-                Email = user.EmployeeEmail,
-                Role = user.Employee_Role.ToString()
+                EmployeeId = user.EmployeeId,
+                EmployeeName = user.EmployeeName,
+                EmployeeGender = user.EmployeeGender,
+                EmployeePhone = user.EmployeePhone,
+                EmployeeEmail = user.EmployeeEmail,
+                EmployeeCity = user.EmployeeCity,
+                Employee_Role = user.Employee_Role,
+                EmployeeCreditCard = user.EmployeeCreditCard
             };
         }
 
-        public async Task<bool> UpdateUserAsync(int id, UpdateUserDto userDto)
+        public async Task AddUserAsync(CreateUserDto dto)
+        {
+            var user = new User
+            {
+                EmployeeName = dto.EmployeeName,
+                EmployeeGender = dto.EmployeeGender,
+                EmployeePhone = dto.EmployeePhone,
+                EmployeeEmail = dto.EmployeeEmail,
+                EmployeeCity = dto.EmployeeCity,
+                Employee_Role = dto.Employee_Role,
+                EmployeeCreditCard = dto.EmployeeCreditCard,
+                EmployeePassword = dto.EmployeePassword
+            };
+
+            await _userRepository.AddUserAsync(user);
+        }
+
+        public async Task<bool> UpdateUserAsync(int id, UpdateUserDto dto)
         {
             var user = await _userRepository.GetUserByIdAsync(id);
             if (user == null) return false;
 
-            user.EmployeeName = userDto.Name;
-            user.EmployeeEmail = userDto.Email;
+            user.EmployeeName = dto.EmployeeName ?? user.EmployeeName;
+            user.EmployeePhone = dto.EmployeePhone ?? user.EmployeePhone;
+           // user.EmployeeEmail = dto.EmployeeEmail ?? user.EmployeeEmail;
+            user.EmployeeCity = dto.EmployeeCity ?? user.EmployeeCity;
 
-            return await _userRepository.UpdateUserAsync(user);
+            await _userRepository.UpdateUserAsync(user);
+            return true;
         }
 
         public async Task<bool> DeleteUserAsync(int id)
         {
-            return await _userRepository.DeleteUserAsync(id);
+            var user = await _userRepository.GetUserByIdAsync(id);
+            if (user == null)
+                return false;
+
+            _userRepository.DeleteUser(user);
+            return await _userRepository.SaveChangesAsync();
         }
 
-        public async Task<List<FavoriteDto>> GetUserFavoritesAsync(int userId)
-        {
-            var favorites = await _userRepository.GetUserFavoritesAsync(userId);
-            return favorites.Select(f => new FavoriteDto
-            {
-                Id = f.Id,
-                RestaurantName = f.Restaurant?.Name,
-                MenuItemName = f.MenuItem?.Name,
-                AddedOn = f.AddedOn
-            }).ToList();
-        }
     }
+
 }
 

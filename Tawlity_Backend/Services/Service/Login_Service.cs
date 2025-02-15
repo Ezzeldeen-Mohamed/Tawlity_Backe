@@ -62,7 +62,6 @@ namespace Tawlity_Backend.Services.Service
                 EmployeeCreditCard = registerDto.EmployeeCreditCard,
                 EmployeeGender = registerDto.EmployeeGender,
                 EmployeePhone = registerDto.EmployeePhone,
-               // Employee_Role = registerDto.Employee_Role
             };
 
             // Save the employee to the database
@@ -85,9 +84,9 @@ namespace Tawlity_Backend.Services.Service
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, employee.EmployeeId.ToString()), // User ID is added
+                new Claim(ClaimTypes.NameIdentifier, employee.EmployeeId.ToString().ToLower()), // User ID is added
                 new Claim(ClaimTypes.Name, employee.EmployeeName),
-                new Claim(ClaimTypes.Role, employee.Employee_Role.ToString())
+                new Claim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", employee.Employee_Role.ToString()) // ⬅️ استخدم نفس القيم
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));

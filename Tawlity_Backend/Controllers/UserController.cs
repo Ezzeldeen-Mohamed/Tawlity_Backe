@@ -8,7 +8,7 @@ using Tawlity_Backend.Services.IService;
 namespace Tawlity_Backend.Controllers
 {
     [ApiController]
-    [Route("api/users")]
+    [Route("api/[Controller]")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -17,50 +17,40 @@ namespace Tawlity_Backend.Controllers
         {
             _userService = userService;
         }
+
+        // 🔹 GET: /api/users (Admin-only)
         [HttpGet]
-        [Authorize(Roles = nameof(Employee_Role.Admin))]
-        [AllowAnonymous]
+        //   [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await _userService.GetAllUsersAsync();
-            return Ok(users);
+            return Ok(await _userService.GetAllUsersAsync());
         }
-        // GET: /api/users/{id}
+
+        // 🔹 GET: /api/users/{id}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
             var user = await _userService.GetUserByIdAsync(id);
-            if (user == null) return NotFound();
-            return Ok(user);
+            return user != null ? Ok(user) : NotFound("User not found.");
         }
 
-        // PUT: /api/users/{id}
+        // 🔹 PUT: /api/users/{id}
         [HttpPut("{id}")]
-        [Authorize] 
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserDto userDto)
+        //    [Authorize]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserDto dto)
         {
-            var result = await _userService.UpdateUserAsync(id, userDto);
-            if (!result) return NotFound();
-            return Ok(new { message = "User updated successfully." });
+            var updated = await _userService.UpdateUserAsync(id, dto);
+            return updated ? Ok("Success") : NotFound("User not found.");
         }
 
-        // DELETE: /api/users/{id} (Admin only)
+        // 🔹 DELETE: /api/users/{id} (Admin-only)
         [HttpDelete("{id}")]
-        [Authorize(Roles = nameof(Employee_Role.Admin))]
+        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var result = await _userService.DeleteUserAsync(id);
-            if (!result) return NotFound();
-            return Ok(new { message = "User deleted successfully." });
+            var deleted = await _userService.DeleteUserAsync(id);
+            return deleted ? NoContent() : NotFound("User not found.");
         }
 
-        // GET: /api/users/{userId}/favorites
-        [HttpGet("{userId}/favorites")]
-        public async Task<IActionResult> GetUserFavorites(int userId)
-        {
-            var favorites = await _userService.GetUserFavoritesAsync(userId);
-            return Ok(favorites);
-        }
     }
-
 }

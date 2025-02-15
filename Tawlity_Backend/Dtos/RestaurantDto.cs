@@ -2,48 +2,73 @@
 
 namespace Tawlity_Backend.Dtos
 {
-    public class RestaurantDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Phone { get; set; }
-        public IEnumerable<BranchDto> Branches { get; set; }
-        public IEnumerable<MenuItemDto> MenuItems { get; set; }
-    }
-
     public class CreateRestaurantDto
     {
-        [Required]
-        [StringLength(100)]
-        public string Name { get; set; }
+        [Required, StringLength(100)]
+        public string Name { get; set; } = string.Empty;
 
         [StringLength(500)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [Phone]
-        public string Phone { get; set; }
-        public string Address { get; set; }
+        public string? Phone { get; set; }
+
+        public string? Address { get; set; }
+
         [Required]
         public double Latitude { get; set; }
 
         [Required]
         public double Longitude { get; set; }
-        public IEnumerable<CreateMenuItemDto> MenuItems { get; set; }
 
+        [Required]
+        public int UserId { get; set; }  // مالك المطعم
+
+        public List<CreateMenuItemDto> MenuItems { get; set; } = new();
     }
-
     public class UpdateRestaurantDto
     {
-        [StringLength(100)]
-        public string Name { get; set; }
+        [Required, StringLength(100)]
+        public string Name { get; set; } = string.Empty;
 
         [StringLength(500)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [Phone]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
+
+        public string? Address { get; set; }
+
+        [Required]
+        public double Latitude { get; set; }
+
+        [Required]
+        public double Longitude { get; set; }
     }
 
 
+    public class RestaurantDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string? Description { get; set; }
+        public string? Phone { get; set; }
+        public string? Address { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        public int UserId { get; set; }
+    }
+    public class CreateMenuItemDto
+    {
+        [Required]
+        public string Name { get; set; } = string.Empty;
+
+        public string? Description { get; set; }
+
+        [Required]
+        [Range(0, 10000)]
+        public decimal Price { get; set; }
+    }
+
 }
+

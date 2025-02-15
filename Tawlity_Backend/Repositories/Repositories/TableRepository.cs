@@ -14,13 +14,6 @@ namespace Tawlity_Backend.Repositories.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Table>> GetTablesByBranchIdAsync(int branchId)
-        {
-            return await _context.Tables
-                .Where(t => t.BranchId == branchId)
-                .ToListAsync();
-        }
-
         public async Task<Table?> GetTableByIdAsync(int tableId)
         {
             return await _context.Tables.FindAsync(tableId);

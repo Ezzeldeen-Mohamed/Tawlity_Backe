@@ -14,12 +14,6 @@ public class TableController : ControllerBase
     }
 
     // 🔹 GET: /api/tables/branch/{branchId}
-    [HttpGet("branch/{branchId}")]
-    public async Task<IActionResult> GetTablesByBranchId(int branchId)
-    {
-        var tables = await _tableService.GetTablesByBranchIdAsync(branchId);
-        return Ok(tables);
-    }
 
     // 🔹 GET: /api/tables/{id}
     [HttpGet("{id}")]

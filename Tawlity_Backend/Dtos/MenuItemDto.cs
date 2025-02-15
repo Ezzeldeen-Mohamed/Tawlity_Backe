@@ -14,17 +14,6 @@ namespace Tawlity_Backend.Dtos
     {
         public string Name { get; set; }
         public decimal Price { get; set; }
-    }
-    public class CreateMenuItemDto
-    {
-        [Required]
-        public string Name { get; set; }
-
-        public string? Description { get; set; }
-
-        [Required]
-        [Range(0, 10000)]
-        public decimal Price { get; set; }
     } 
     public class CreateMetemDto
     {
