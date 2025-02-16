@@ -14,6 +14,10 @@ namespace Tawlity_Backend.Models
 
         public string ?ImageUrl { get; set; } // Image of the table
 
+        [ForeignKey("Restaurant")]
+        public int RestaurantId { get; set; }
+        public virtual Restaurant? Restaurant { get; set; }
+
         // Relationships
         public virtual ICollection<Reservation> Reservations { get; set; } = new HashSet<Reservation>();
     }

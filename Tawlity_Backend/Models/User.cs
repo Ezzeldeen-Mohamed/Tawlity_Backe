@@ -32,12 +32,8 @@ namespace Tawlity_Backend.Models
         public string EmployeeCreditCard { get; set; } = string.Empty;
         public Employee_Role Employee_Role { get; set; }
         public string PasswordHash { get; set; } = string.Empty;
-        public string? ResetToken { get; set; }
-        public DateTime? ResetTokenExpiry { get; set; }
-
-        //public int RoleId { get; set; }
-        //[ForeignKey(nameof(RoleId))]
-        //public virtual Role ?Role { get; set; }
+        public string? ResetToken { get; set; }= string.Empty;
+        public DateTime? ResetTokenExpiry { get; set; }= new DateTime(2025, 3, 10, 19, 00, 00);
 
         // Relationships
         [ForeignKey("Restaurant")]

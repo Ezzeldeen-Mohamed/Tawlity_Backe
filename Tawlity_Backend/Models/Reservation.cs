@@ -21,6 +21,7 @@ namespace Tawlity_Backend.Models
         public Reservation_Status? Status { get; set; } 
 
         // Relationships
+
         public int UserId { get; set; }
         [ForeignKey(nameof(UserId))]
         public virtual User ?User { get; set; }
