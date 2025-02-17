@@ -349,9 +349,8 @@ namespace Tawlity_Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Employee_Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Employee_Role")
+                        .HasColumnType("int");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -382,7 +381,7 @@ namespace Tawlity_Backend.Migrations
                             EmployeeName = "Admin",
                             EmployeePassword = "Ezz1234#",
                             EmployeePhone = "01234567890",
-                            Employee_Role = "Admin",
+                            Employee_Role = 2,
                             PasswordHash = "",
                             ResetToken = "",
                             ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified),
@@ -399,7 +398,7 @@ namespace Tawlity_Backend.Migrations
                             EmployeeName = "Restaurant Owner",
                             EmployeePassword = "Ezz1234#",
                             EmployeePhone = "01234567891",
-                            Employee_Role = "RestaurantOwner",
+                            Employee_Role = 3,
                             PasswordHash = "",
                             ResetToken = "",
                             ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified),
@@ -416,7 +415,7 @@ namespace Tawlity_Backend.Migrations
                             EmployeeName = "John Doe",
                             EmployeePassword = "Ezz1234#",
                             EmployeePhone = "01234567892",
-                            Employee_Role = "Customer",
+                            Employee_Role = 1,
                             PasswordHash = "",
                             ResetToken = "",
                             ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified),
@@ -433,7 +432,7 @@ namespace Tawlity_Backend.Migrations
                             EmployeeName = "Ahmed Ali",
                             EmployeePassword = "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=",
                             EmployeePhone = "01234567890",
-                            Employee_Role = "Admin",
+                            Employee_Role = 2,
                             PasswordHash = "",
                             ResetToken = "",
                             ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified),
@@ -450,7 +449,7 @@ namespace Tawlity_Backend.Migrations
                             EmployeeName = "Fatma Ahmed",
                             EmployeePassword = "Password@123",
                             EmployeePhone = "01234567891",
-                            Employee_Role = "Customer",
+                            Employee_Role = 1,
                             PasswordHash = "",
                             ResetToken = "",
                             ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified),
@@ -467,7 +466,7 @@ namespace Tawlity_Backend.Migrations
                             EmployeeName = "Ezzeldeen",
                             EmployeePassword = "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=",
                             EmployeePhone = "01234567891",
-                            Employee_Role = "Customer",
+                            Employee_Role = 1,
                             PasswordHash = "",
                             ResetToken = "",
                             ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified),

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Tawlity_Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class first : Migration
+    public partial class @do : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,7 +27,7 @@ namespace Tawlity_Backend.Migrations
                     EmployeePassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmployeeConfirmPassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmployeeCreditCard = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Employee_Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Employee_Role = table.Column<int>(type: "int", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ResetToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ResetTokenExpiry = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -204,12 +204,12 @@ namespace Tawlity_Backend.Migrations
                 columns: new[] { "EmployeeId", "EmployeeCity", "EmployeeConfirmPassword", "EmployeeCreditCard", "EmployeeEmail", "EmployeeGender", "EmployeeName", "EmployeePassword", "EmployeePhone", "Employee_Role", "PasswordHash", "ResetToken", "ResetTokenExpiry", "RestaurantId" },
                 values: new object[,]
                 {
-                    { 1, 0, "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=", "1234567812345678", "ezzm80618@gmail.com", 0, "Ahmed Ali", "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=", "01234567890", "Admin", "", "", new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified), 0 },
-                    { 2, 1, "Password@123", "2345678923456789", "fatma.ahmed@example.com", 1, "Fatma Ahmed", "Password@123", "01234567891", "Customer", "", "", new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified), 0 },
-                    { 3, 0, "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=", "2345678923456789", "ezzm806@gmail.com", 0, "Ezzeldeen", "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=", "01234567891", "Customer", "", "", new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified), 0 },
-                    { 4, 0, "Ezz1234#", "1234567812345678", "admin@gmail.com", 0, "Admin", "Ezz1234#", "01234567890", "Admin", "", "", new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified), 0 },
-                    { 5, 1, "Ezz1234#", "2345678923456789", "owner@example.com", 1, "Restaurant Owner", "Ezz1234#", "01234567891", "RestaurantOwner", "", "", new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified), 0 },
-                    { 6, 2, "Ezz1234#", "3456789034567890", "john@example.com", 0, "John Doe", "Ezz1234#", "01234567892", "Customer", "", "", new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified), 0 }
+                    { 1, 0, "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=", "1234567812345678", "ezzm80618@gmail.com", 0, "Ahmed Ali", "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=", "01234567890", 2, "", "", new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified), 0 },
+                    { 2, 1, "Password@123", "2345678923456789", "fatma.ahmed@example.com", 1, "Fatma Ahmed", "Password@123", "01234567891", 1, "", "", new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified), 0 },
+                    { 3, 0, "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=", "2345678923456789", "ezzm806@gmail.com", 0, "Ezzeldeen", "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=", "01234567891", 1, "", "", new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified), 0 },
+                    { 4, 0, "Ezz1234#", "1234567812345678", "admin@gmail.com", 0, "Admin", "Ezz1234#", "01234567890", 2, "", "", new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified), 0 },
+                    { 5, 1, "Ezz1234#", "2345678923456789", "owner@example.com", 1, "Restaurant Owner", "Ezz1234#", "01234567891", 3, "", "", new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified), 0 },
+                    { 6, 2, "Ezz1234#", "3456789034567890", "john@example.com", 0, "John Doe", "Ezz1234#", "01234567892", 1, "", "", new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified), 0 }
                 });
 
             migrationBuilder.InsertData(

@@ -105,7 +105,7 @@ namespace Tawlity_Backend.Services.Service
             await _userRepository.UpdateUserAsync(user);
             return true;
         }
-
+  
         public async Task<bool> DeleteUserAsync(int id)
         {
             var user = await _userRepository.GetUserByIdAsync(id);

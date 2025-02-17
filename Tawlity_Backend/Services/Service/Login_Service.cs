@@ -8,6 +8,7 @@ using Tawlity_Backend.Services.Interface;
 using Tawlity_Backend.Services.IService;
 using BCrypt.Net;
 using Org.BouncyCastle.Tls;
+using Tawlity.Core.Enums;
 
 
 namespace Tawlity_Backend.Services.Service
@@ -62,6 +63,7 @@ namespace Tawlity_Backend.Services.Service
                 EmployeeCreditCard = registerDto.EmployeeCreditCard,
                 EmployeeGender = registerDto.EmployeeGender,
                 EmployeePhone = registerDto.EmployeePhone,
+                Employee_Role=Employee_Role.Customer
             };
 
             // Save the employee to the database
@@ -106,23 +108,26 @@ namespace Tawlity_Backend.Services.Service
         public async Task<string?> ForgotPasswordAsync(ForgotPasswordDto dto)
         {
             var user = await _repository.GetEmployeeByEmailAsync(dto.Email);
+
             if (user == null)
                 return "Email not registered.";
+            else
+            {
+                var token = Guid.NewGuid().ToString();
+                user.ResetToken = token;
+                user.ResetTokenExpiry = DateTime.UtcNow.AddHours(1);
+                await _repository.SaveChangesAsync();
 
-            var token = Guid.NewGuid().ToString();
-            user.ResetToken = token;
-            user.ResetTokenExpiry = DateTime.UtcNow.AddHours(1);
-            await _repository.SaveChangesAsync();
+                var subject = "Reset Your Password";
+                //var resetLink = $"https://localhost:7039/api/Regester/reset-password?token={token}";
+                var resetLink = $"This is your token:( {token} )";
+                //var body = $"<p>Click <a href='{resetLink}'>here</a> to reset your password.</p>";
+                var body = $"<p> {resetLink} to reset your password.</p>";
 
-            var subject = "Reset Your Password";
-            //var resetLink = $"https://localhost:7039/api/Regester/reset-password?token={token}";
-            var resetLink = $"This is your token:( {token} )";
-            //var body = $"<p>Click <a href='{resetLink}'>here</a> to reset your password.</p>";
-            var body = $"<p> {resetLink} to reset your password.</p>";
+                await _emailService.SendEmailAsync(dto.Email, subject, body);
 
-            await _emailService.SendEmailAsync(dto.Email, subject, body);
-
-            return "Password reset link has been sent to your email.";
+                return "Password reset link has been sent to your email.";
+            }
         }
 
         public async Task<string?> ResetPasswordAsync(string token, ResetPasswordDto dto)

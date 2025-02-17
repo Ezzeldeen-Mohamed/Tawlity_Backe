@@ -20,7 +20,7 @@ namespace Tawlity_Backend.Controllers
 
         // 🔹 GET: /api/users (Admin-only)
         [HttpGet]
-        //   [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUsers()
         {
             return Ok(await _userService.GetAllUsersAsync());
@@ -35,8 +35,8 @@ namespace Tawlity_Backend.Controllers
         }
 
         // 🔹 PUT: /api/users/{id}
-        [HttpPut("{id}")]
         //    [Authorize]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserDto dto)
         {
             var updated = await _userService.UpdateUserAsync(id, dto);
@@ -44,8 +44,8 @@ namespace Tawlity_Backend.Controllers
         }
 
         // 🔹 DELETE: /api/users/{id} (Admin-only)
-        [HttpDelete("{id}")]
         // [Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             var deleted = await _userService.DeleteUserAsync(id);

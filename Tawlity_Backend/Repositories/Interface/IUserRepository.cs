@@ -1,4 +1,5 @@
-﻿using Tawlity_Backend.Models;
+﻿using Tawlity_Backend.Dtos;
+using Tawlity_Backend.Models;
 
 namespace Tawlity_Backend.Repositories.Interface
 {

@@ -25,7 +25,7 @@ namespace Tawlity_Backend.Data
 
             modelBuilder.Entity<User>()
                 .Property(p => p.Employee_Role)
-                .HasConversion<string>();
+                .HasConversion<int>();
 
             // 👇 علاقات المستخدم والمطعم
             modelBuilder.Entity<User>()
