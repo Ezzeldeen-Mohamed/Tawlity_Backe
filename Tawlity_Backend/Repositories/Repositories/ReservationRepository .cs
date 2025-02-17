@@ -19,7 +19,7 @@ namespace Tawlity_Backend.Repositories.Repositories
         {
             return await _context.Reservations
                 .Include(r => r.User)
-                .ThenInclude(t => t.Restaurant)
+                .ThenInclude(t => t.Restaurants)
                 .Include(r => r.Table)
                 .ToListAsync();
         }

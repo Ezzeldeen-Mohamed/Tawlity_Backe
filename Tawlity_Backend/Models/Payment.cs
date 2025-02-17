@@ -30,7 +30,7 @@ namespace Tawlity_Backend.Models
         public virtual User ?User { get; set; }
 
         [ForeignKey("Restaurant")]
-        public int RestaurantId { get; set; }
+        public int ?RestaurantId { get; set; }
         public virtual Restaurant ?Restaurant { get; set; }
     }
 }

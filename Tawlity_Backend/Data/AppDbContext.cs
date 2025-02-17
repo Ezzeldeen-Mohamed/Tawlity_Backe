@@ -27,13 +27,6 @@ namespace Tawlity_Backend.Data
                 .Property(p => p.Employee_Role)
                 .HasConversion<int>();
 
-            // 👇 علاقات المستخدم والمطعم
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Restaurant)
-                .WithOne(r => r.User)
-                .HasForeignKey<Restaurant>(r => r.UserId)
-                .OnDelete(DeleteBehavior.Restrict); // 🔹 لا تحذف المطعم عند حذف المستخدم
-
             // 👇 علاقات المطعم مع الطلبات والمدفوعات
             modelBuilder.Entity<Restaurant>()
                 .HasMany(r => r.MenuItems)
@@ -71,22 +64,8 @@ namespace Tawlity_Backend.Data
                 .HasOne(o => o.Reservation)
                 .WithMany(r => r.OrderItems)
                 .HasForeignKey(o => o.ReservationId)
-                .OnDelete(DeleteBehavior.NoAction)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<OrderItem>()
-                .HasOne(o => o.MenuItem)
-                .WithMany(m => m.OrderItems)
-                .HasForeignKey(o => o.MenuItemId)
-                .OnDelete(DeleteBehavior.Cascade);
-            // 🔹 العلاقة بين OrderItem و Reservation
-            modelBuilder.Entity<OrderItem>()
-                .HasOne(o => o.Reservation)
-                .WithMany(r => r.OrderItems)
-                .HasForeignKey(o => o.ReservationId)
-                .OnDelete(DeleteBehavior.NoAction); // ✅ الحل هنا
-
-            // 🔹 العلاقة بين OrderItem و MenuItem
             modelBuilder.Entity<OrderItem>()
                 .HasOne(o => o.MenuItem)
                 .WithMany(m => m.OrderItems)
@@ -99,6 +78,23 @@ namespace Tawlity_Backend.Data
                 .WithMany(u => u.Reservations)
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Restrict); // ✅ تجنب حذف المستخدم عند حذف الحجز
+
+            // ✅ السماح لمستخدم واحد بامتلاك عدة مطاعم
+            modelBuilder.Entity<Restaurant>()
+                .HasOne(r => r.User)
+                .WithMany(u => u.Restaurants)  // ✅ تعديل العلاقة إلى One-To-Many
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Payment>()
+                .HasOne(p => p.Restaurant)
+                .WithMany(r => r.Payments)
+                .HasForeignKey(p => p.RestaurantId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Restaurant>()
+                .HasOne(r => r.User)
+                .WithMany(u => u.Restaurants)
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Restrict); // ✅ يمنع الحذف المتكرر
 
             // 🔹 العلاقة بين Reservation و Table
             modelBuilder.Entity<Reservation>()
@@ -114,7 +110,6 @@ namespace Tawlity_Backend.Data
                 .HasForeignKey(r => r.RestaurantId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
             // ✅ **إضافة بيانات افتراضية (Seeding)** ✅
 
             // 👇 بيانات المستخدمين
@@ -125,7 +120,7 @@ namespace Tawlity_Backend.Data
                 new User
                   {
                       EmployeeId = 1,
-                      EmployeeName = "Ahmed Ali",
+                      EmployeeName = "Ezzeldeen Mohamed",
                       EmployeePhone = "01234567890",
                       EmployeeEmail = "ezzm80618@gmail.com",
                       EmployeeCity = Employee_City.Cairo,
@@ -153,7 +148,7 @@ namespace Tawlity_Backend.Data
                     EmployeeId = 3,
                     EmployeeName = "Ezzeldeen",
                     EmployeePhone = "01234567891",
-                    EmployeeEmail = "ezzm806@gmail.com",
+                    EmployeeEmail = "ezzedeen.0522029@gmail.com",
                     EmployeeCity = Employee_City.Cairo,
                     EmployeeGender = Employee_Gender.male,
                     EmployeePassword = "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=",
@@ -161,39 +156,44 @@ namespace Tawlity_Backend.Data
                     EmployeeCreditCard = "2345678923456789",
                     Employee_Role = Employee_Role.Customer
                 });
-               
-
-            // 👇 بيانات المطاعم
+            // ✅ إضافة مطاعم بدون تكرار `UserId` الخطأ
             modelBuilder.Entity<Restaurant>().HasData(
-                new Restaurant { Id = 1, Name = "Tawlity Restaurant", Address = "Cairo", Latitude = 30.0444, Longitude = 31.2357, UserId = 2 }
+                new Restaurant { Id = 1, Name = "Tawlity Restaurant1", Address = "Cairo", Latitude = 30.0444, Longitude = 39.2357, UserId = 2 },
+                new Restaurant { Id = 2, Name = "Restaurant2", Address = "Tanta", Latitude = 35.0454, Longitude = 38.2357, UserId = 3 },
+                new Restaurant { Id = 3, Name = "Restaurant3", Address = "Banha", Latitude = 20.0644, Longitude = 61.4357, UserId = 3 },
+                new Restaurant { Id = 4, Name = "Restaurant4", Address = "Alex", Latitude = 44.0444, Longitude = 21.2357, UserId = 2 },
+                new Restaurant { Id = 5, Name = "Restaurant5", Address = "Giza", Latitude = 10.0444, Longitude = 35.2357, UserId = 3 },
+                new Restaurant { Id = 6, Name = "Restaurant6", Address = "Luxor", Latitude = 12.1234, Longitude = 32.5678, UserId = 2 }
             );
 
-            // 👇 بيانات الطاولات
+            // ✅ إضافة 6 طاولات
             modelBuilder.Entity<Table>().HasData(
                 new Table { Id = 1, Capacity = 4, ImageUrl = "table1.jpg", RestaurantId = 1 },
-                new Table { Id = 2, Capacity = 6, ImageUrl = "table2.jpg", RestaurantId = 1 }
+                new Table { Id = 2, Capacity = 6, ImageUrl = "table2.jpg", RestaurantId = 1 },
+                new Table { Id = 3, Capacity = 2, ImageUrl = "table3.jpg", RestaurantId = 2 },
+                new Table { Id = 4, Capacity = 8, ImageUrl = "table4.jpg", RestaurantId = 3 },
+                new Table { Id = 5, Capacity = 10, ImageUrl = "table5.jpg", RestaurantId = 4 },
+                new Table { Id = 6, Capacity = 12, ImageUrl = "table6.jpg", RestaurantId = 5 }
             );
 
-            // 👇 بيانات قائمة الطعام
+            // ✅ إضافة 6 أطعمة إلى قائمة الطعام
             modelBuilder.Entity<MenuItem>().HasData(
                 new MenuItem { Id = 1, Name = "Pasta", Description = "Delicious pasta", Price = 50, RestaurantId = 1 },
-                new MenuItem { Id = 2, Name = "Pizza", Description = "Tasty pizza", Price = 100, RestaurantId = 1 }
+                new MenuItem { Id = 2, Name = "Pizza", Description = "Tasty pizza", Price = 100, RestaurantId = 1 },
+                new MenuItem { Id = 3, Name = "Burger", Description = "Juicy burger", Price = 80, RestaurantId = 2 },
+                new MenuItem { Id = 4, Name = "Salad", Description = "Fresh salad", Price = 30, RestaurantId = 3 },
+                new MenuItem { Id = 5, Name = "Steak", Description = "Grilled steak", Price = 200, RestaurantId = 4 },
+                new MenuItem { Id = 6, Name = "Soup", Description = "Hot soup", Price = 25, RestaurantId = 5 }
             );
 
-            // 👇 بيانات الحجوزات
+            // ✅ إضافة 6 حجوزات
             modelBuilder.Entity<Reservation>().HasData(
-                new Reservation { Id = 1, ReservationDate = new DateOnly(2025, 3, 10), ReservationTime = new TimeOnly(19, 00), PeopleCount = 2, Status = Reservation_Status.Confirmed, UserId = 3, TableId = 1, RestaurantId = 1 }
-            );
-
-            // 👇 بيانات المدفوعات
-            modelBuilder.Entity<Payment>().HasData(
-                new Payment { Id = 1, Amount = 150, PaymentMethod = "Credit Card", TransactionId = "TXN123456", Status = "Completed", PaymentDate =new DateTime(2025, 3, 10), UserId = 3, RestaurantId = 1 }
-            );
-
-            // 👇 بيانات الطلبات
-            modelBuilder.Entity<OrderItem>().HasData(
-                new OrderItem { Id = 1, Quantity = 1, ReservationId = 1, MenuItemId = 1 },
-                new OrderItem { Id = 2, Quantity = 2, ReservationId = 1, MenuItemId = 2 }
+                new Reservation { Id = 1, ReservationDate = new DateOnly(2025, 3, 10), ReservationTime = new TimeOnly(19, 00), PeopleCount = 2, Status = Reservation_Status.Confirmed, UserId = 4, TableId = 1, RestaurantId = 1 },
+                new Reservation { Id = 2, ReservationDate = new DateOnly(2025, 4, 15), ReservationTime = new TimeOnly(20, 30), PeopleCount = 4, Status = Reservation_Status.Pending, UserId = 5, TableId = 2, RestaurantId = 2 },
+                new Reservation { Id = 3, ReservationDate = new DateOnly(2025, 5, 5), ReservationTime = new TimeOnly(18, 00), PeopleCount = 6, Status = Reservation_Status.Confirmed, UserId = 4, TableId = 3, RestaurantId = 3 },
+                new Reservation { Id = 4, ReservationDate = new DateOnly(2025, 6, 20), ReservationTime = new TimeOnly(21, 45), PeopleCount = 8, Status = Reservation_Status.Cancelled, UserId = 5, TableId = 4, RestaurantId = 4 },
+                new Reservation { Id = 5, ReservationDate = new DateOnly(2025, 7, 7), ReservationTime = new TimeOnly(17, 30), PeopleCount = 3, Status = Reservation_Status.Pending, UserId = 4, TableId = 5, RestaurantId = 5 },
+                new Reservation { Id = 6, ReservationDate = new DateOnly(2025, 8, 12), ReservationTime = new TimeOnly(22, 00), PeopleCount = 5, Status = Reservation_Status.Confirmed, UserId = 5, TableId = 6, RestaurantId = 6 }
             );
         } 
 

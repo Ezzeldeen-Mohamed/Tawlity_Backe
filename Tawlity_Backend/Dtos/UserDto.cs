@@ -66,9 +66,4 @@ namespace Tawlity_Backend.Dtos
         public string? EmployeePhone { get; set; }
         public Employee_City? EmployeeCity { get; set; }
     } 
-    public class DeleteUserDto
-    {
-        public string? EmployeeEmail { get; set; }
-    }
-
 }

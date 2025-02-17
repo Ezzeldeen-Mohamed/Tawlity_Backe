@@ -12,8 +12,8 @@ using Tawlity_Backend.Data;
 namespace Tawlity_Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250217055209_do")]
-    partial class @do
+    [Migration("20250217173425_first")]
+    partial class first
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,6 +70,38 @@ namespace Tawlity_Backend.Migrations
                             Name = "Pizza",
                             Price = 100m,
                             RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Juicy burger",
+                            Name = "Burger",
+                            Price = 80m,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Fresh salad",
+                            Name = "Salad",
+                            Price = 30m,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Grilled steak",
+                            Name = "Steak",
+                            Price = 200m,
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Hot soup",
+                            Name = "Soup",
+                            Price = 25m,
+                            RestaurantId = 5
                         });
                 });
 
@@ -97,22 +129,6 @@ namespace Tawlity_Backend.Migrations
                     b.HasIndex("ReservationId");
 
                     b.ToTable("OrderItems");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            MenuItemId = 1,
-                            Quantity = 1,
-                            ReservationId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            MenuItemId = 2,
-                            Quantity = 2,
-                            ReservationId = 1
-                        });
                 });
 
             modelBuilder.Entity("Tawlity_Backend.Models.Payment", b =>
@@ -133,7 +149,7 @@ namespace Tawlity_Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RestaurantId")
+                    b.Property<int?>("RestaurantId")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
@@ -154,19 +170,6 @@ namespace Tawlity_Backend.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Payments");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Amount = 150m,
-                            PaymentDate = new DateTime(2025, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PaymentMethod = "Credit Card",
-                            RestaurantId = 1,
-                            Status = "Completed",
-                            TransactionId = "TXN123456",
-                            UserId = 3
-                        });
                 });
 
             modelBuilder.Entity("Tawlity_Backend.Models.Reservation", b =>
@@ -218,7 +221,62 @@ namespace Tawlity_Backend.Migrations
                             RestaurantId = 1,
                             Status = 2,
                             TableId = 1,
-                            UserId = 3
+                            UserId = 4
+                        },
+                        new
+                        {
+                            Id = 2,
+                            PeopleCount = 4,
+                            ReservationDate = new DateOnly(2025, 4, 15),
+                            ReservationTime = new TimeOnly(20, 30, 0),
+                            RestaurantId = 2,
+                            Status = 1,
+                            TableId = 2,
+                            UserId = 5
+                        },
+                        new
+                        {
+                            Id = 3,
+                            PeopleCount = 6,
+                            ReservationDate = new DateOnly(2025, 5, 5),
+                            ReservationTime = new TimeOnly(18, 0, 0),
+                            RestaurantId = 3,
+                            Status = 2,
+                            TableId = 3,
+                            UserId = 4
+                        },
+                        new
+                        {
+                            Id = 4,
+                            PeopleCount = 8,
+                            ReservationDate = new DateOnly(2025, 6, 20),
+                            ReservationTime = new TimeOnly(21, 45, 0),
+                            RestaurantId = 4,
+                            Status = 3,
+                            TableId = 4,
+                            UserId = 5
+                        },
+                        new
+                        {
+                            Id = 5,
+                            PeopleCount = 3,
+                            ReservationDate = new DateOnly(2025, 7, 7),
+                            ReservationTime = new TimeOnly(17, 30, 0),
+                            RestaurantId = 5,
+                            Status = 1,
+                            TableId = 5,
+                            UserId = 4
+                        },
+                        new
+                        {
+                            Id = 6,
+                            PeopleCount = 5,
+                            ReservationDate = new DateOnly(2025, 8, 12),
+                            ReservationTime = new TimeOnly(22, 0, 0),
+                            RestaurantId = 6,
+                            Status = 2,
+                            TableId = 6,
+                            UserId = 5
                         });
                 });
 
@@ -256,8 +314,7 @@ namespace Tawlity_Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Restaurants");
 
@@ -267,8 +324,53 @@ namespace Tawlity_Backend.Migrations
                             Id = 1,
                             Address = "Cairo",
                             Latitude = 30.0444,
-                            Longitude = 31.235700000000001,
-                            Name = "Tawlity Restaurant",
+                            Longitude = 39.235700000000001,
+                            Name = "Tawlity Restaurant1",
+                            UserId = 2
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Address = "Tanta",
+                            Latitude = 35.045400000000001,
+                            Longitude = 38.235700000000001,
+                            Name = "Restaurant2",
+                            UserId = 3
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Address = "Banha",
+                            Latitude = 20.064399999999999,
+                            Longitude = 61.435699999999997,
+                            Name = "Restaurant3",
+                            UserId = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Address = "Alex",
+                            Latitude = 44.044400000000003,
+                            Longitude = 21.235700000000001,
+                            Name = "Restaurant4",
+                            UserId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Address = "Giza",
+                            Latitude = 10.0444,
+                            Longitude = 35.235700000000001,
+                            Name = "Restaurant5",
+                            UserId = 3
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Address = "Luxor",
+                            Latitude = 12.1234,
+                            Longitude = 32.567799999999998,
+                            Name = "Restaurant6",
                             UserId = 2
                         });
                 });
@@ -310,6 +412,34 @@ namespace Tawlity_Backend.Migrations
                             Capacity = 6,
                             ImageUrl = "table2.jpg",
                             RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Capacity = 2,
+                            ImageUrl = "table3.jpg",
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Capacity = 8,
+                            ImageUrl = "table4.jpg",
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Capacity = 10,
+                            ImageUrl = "table5.jpg",
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Capacity = 12,
+                            ImageUrl = "table6.jpg",
+                            RestaurantId = 5
                         });
                 });
 
@@ -365,9 +495,6 @@ namespace Tawlity_Backend.Migrations
                     b.Property<DateTime?>("ResetTokenExpiry")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("RestaurantId")
-                        .HasColumnType("int");
-
                     b.HasKey("EmployeeId");
 
                     b.ToTable("Employees");
@@ -387,8 +514,7 @@ namespace Tawlity_Backend.Migrations
                             Employee_Role = 2,
                             PasswordHash = "",
                             ResetToken = "",
-                            ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified),
-                            RestaurantId = 0
+                            ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -404,8 +530,7 @@ namespace Tawlity_Backend.Migrations
                             Employee_Role = 3,
                             PasswordHash = "",
                             ResetToken = "",
-                            ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified),
-                            RestaurantId = 0
+                            ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -421,8 +546,7 @@ namespace Tawlity_Backend.Migrations
                             Employee_Role = 1,
                             PasswordHash = "",
                             ResetToken = "",
-                            ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified),
-                            RestaurantId = 0
+                            ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -438,8 +562,7 @@ namespace Tawlity_Backend.Migrations
                             Employee_Role = 2,
                             PasswordHash = "",
                             ResetToken = "",
-                            ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified),
-                            RestaurantId = 0
+                            ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -455,8 +578,7 @@ namespace Tawlity_Backend.Migrations
                             Employee_Role = 1,
                             PasswordHash = "",
                             ResetToken = "",
-                            ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified),
-                            RestaurantId = 0
+                            ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -472,8 +594,7 @@ namespace Tawlity_Backend.Migrations
                             Employee_Role = 1,
                             PasswordHash = "",
                             ResetToken = "",
-                            ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified),
-                            RestaurantId = 0
+                            ResetTokenExpiry = new DateTime(2025, 3, 10, 19, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -512,8 +633,7 @@ namespace Tawlity_Backend.Migrations
                     b.HasOne("Tawlity_Backend.Models.Restaurant", "Restaurant")
                         .WithMany("Payments")
                         .HasForeignKey("RestaurantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Tawlity_Backend.Models.User", "User")
                         .WithMany("Payments")
@@ -556,8 +676,8 @@ namespace Tawlity_Backend.Migrations
             modelBuilder.Entity("Tawlity_Backend.Models.Restaurant", b =>
                 {
                     b.HasOne("Tawlity_Backend.Models.User", "User")
-                        .WithOne("Restaurant")
-                        .HasForeignKey("Tawlity_Backend.Models.Restaurant", "UserId")
+                        .WithMany("Restaurants")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -603,7 +723,7 @@ namespace Tawlity_Backend.Migrations
 
                     b.Navigation("Reservations");
 
-                    b.Navigation("Restaurant");
+                    b.Navigation("Restaurants");
                 });
 #pragma warning restore 612, 618
         }

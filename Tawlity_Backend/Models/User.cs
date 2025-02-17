@@ -36,9 +36,7 @@ namespace Tawlity_Backend.Models
         public DateTime? ResetTokenExpiry { get; set; }= new DateTime(2025, 3, 10, 19, 00, 00);
 
         // Relationships
-        [ForeignKey("Restaurant")]
-        public int RestaurantId { get; set; }  // New Relationship
-        public virtual Restaurant? Restaurant { get; set; }
+        public virtual ICollection<Restaurant> Restaurants { get; set; } = new HashSet<Restaurant>();
         public virtual ICollection<Reservation> Reservations { get; set; } = new HashSet<Reservation>();
         public virtual ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();
 
