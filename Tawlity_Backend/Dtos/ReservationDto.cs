@@ -18,7 +18,7 @@ namespace Tawlity_Backend.Dtos
         public DateOnly ReservationDate { get; set; }
         public TimeOnly ReservationTime { get; set; }
         public int PeopleCount { get; set; }
-        public Reservation_Status Status { get; set; } // Enum for status
+        public string Status { get; set; } // Enum for status
         public List<OrderItemDto> OrderItems { get; set; } = new List<OrderItemDto>(); // ✅ Used Here
 
     }
@@ -29,6 +29,7 @@ namespace Tawlity_Backend.Dtos
         public string UserName { get; set; }
         public int TableId { get; set; }
         public string RestaurantName { get; set; }
+        public int RestaurantId { get; set; }
         public DateOnly ReservationDate { get; set; }
         public TimeOnly ReservationTime { get; set; }
         public int PeopleCount { get; set; }

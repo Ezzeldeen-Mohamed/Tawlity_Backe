@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Tawlity_Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class first : Migration
+    public partial class fir : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

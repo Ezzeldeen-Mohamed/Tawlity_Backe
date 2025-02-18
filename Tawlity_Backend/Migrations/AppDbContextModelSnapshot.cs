@@ -325,7 +325,7 @@ namespace Tawlity_Backend.Migrations
                             Longitude = 39.235700000000001,
                             Name = "Tawlity Restaurant1",
                             Phone = "01147790490",
-                            UserId = 2
+                            UserId = 1
                         },
                         new
                         {
@@ -336,7 +336,7 @@ namespace Tawlity_Backend.Migrations
                             Longitude = 38.235700000000001,
                             Name = "Restaurant2",
                             Phone = "01147790498",
-                            UserId = 3
+                            UserId = 4
                         },
                         new
                         {
@@ -347,7 +347,7 @@ namespace Tawlity_Backend.Migrations
                             Longitude = 61.435699999999997,
                             Name = "Restaurant3",
                             Phone = "01147790465",
-                            UserId = 3
+                            UserId = 4
                         },
                         new
                         {
@@ -358,7 +358,7 @@ namespace Tawlity_Backend.Migrations
                             Longitude = 21.235700000000001,
                             Name = "Restaurant4",
                             Phone = "01147790488",
-                            UserId = 2
+                            UserId = 1
                         },
                         new
                         {
@@ -369,7 +369,7 @@ namespace Tawlity_Backend.Migrations
                             Longitude = 35.235700000000001,
                             Name = "Restaurant5",
                             Phone = "01147790467",
-                            UserId = 3
+                            UserId = 5
                         },
                         new
                         {
@@ -380,7 +380,7 @@ namespace Tawlity_Backend.Migrations
                             Longitude = 32.567799999999998,
                             Name = "Restaurant6",
                             Phone = "01147790468",
-                            UserId = 2
+                            UserId = 5
                         });
                 });
 

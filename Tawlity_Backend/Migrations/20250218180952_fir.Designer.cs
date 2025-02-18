@@ -12,8 +12,8 @@ using Tawlity_Backend.Data;
 namespace Tawlity_Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250218073745_fi")]
-    partial class fi
+    [Migration("20250218180952_fir")]
+    partial class fir
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -323,66 +323,54 @@ namespace Tawlity_Backend.Migrations
                         {
                             Id = 1,
                             Address = "Cairo",
-                            Description = "This restaurant is very nice to to use for every one.",
                             Latitude = 30.0444,
                             Longitude = 39.235700000000001,
                             Name = "Tawlity Restaurant1",
-                            Phone = "01147790490",
                             UserId = 2
                         },
                         new
                         {
                             Id = 2,
                             Address = "Tanta",
-                            Description = "This restaurant is very nice to to use for every one.",
                             Latitude = 35.045400000000001,
                             Longitude = 38.235700000000001,
                             Name = "Restaurant2",
-                            Phone = "01147790498",
                             UserId = 3
                         },
                         new
                         {
                             Id = 3,
                             Address = "Banha",
-                            Description = "This restaurant is very nice to to use for every one.",
                             Latitude = 20.064399999999999,
                             Longitude = 61.435699999999997,
                             Name = "Restaurant3",
-                            Phone = "01147790465",
                             UserId = 3
                         },
                         new
                         {
                             Id = 4,
                             Address = "Alex",
-                            Description = "This restaurant is very nice to to use for every one.",
                             Latitude = 44.044400000000003,
                             Longitude = 21.235700000000001,
                             Name = "Restaurant4",
-                            Phone = "01147790488",
                             UserId = 2
                         },
                         new
                         {
                             Id = 5,
                             Address = "Giza",
-                            Description = "This restaurant is very nice to to use for every one.",
                             Latitude = 10.0444,
                             Longitude = 35.235700000000001,
                             Name = "Restaurant5",
-                            Phone = "01147790467",
                             UserId = 3
                         },
                         new
                         {
                             Id = 6,
                             Address = "Luxor",
-                            Description = "This restaurant is very nice to to use for every one.",
                             Latitude = 12.1234,
                             Longitude = 32.567799999999998,
                             Name = "Restaurant6",
-                            Phone = "01147790468",
                             UserId = 2
                         });
                 });

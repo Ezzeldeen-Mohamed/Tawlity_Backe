@@ -9,6 +9,7 @@ using Tawlity_Backend.Services.IService;
 using BCrypt.Net;
 using Org.BouncyCastle.Tls;
 using Tawlity.Core.Enums;
+using Tawlity_Backend.SomeThingsWeWillUseInTheFuther;
 
 
 namespace Tawlity_Backend.Services.Service
@@ -86,19 +87,19 @@ namespace Tawlity_Backend.Services.Service
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, employee.EmployeeId.ToString().ToLower()), // User ID is added
+                new Claim(ClaimTypes.NameIdentifier, employee.EmployeeId.ToString()), // ✅ User ID
                 new Claim(ClaimTypes.Name, employee.EmployeeName),
-                new Claim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", employee.Employee_Role.ToString()) // ⬅️ استخدم نفس القيم
+                new Claim(ClaimTypes.Role, employee.Employee_Role.ToString()), // ✅ Use ClaimTypes.Role for proper authorization
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(double.Parse(_config["Jwt:ExpiresInMinutes"]!)),
+                expires: DateTime.UtcNow.AddMinutes(double.Parse(_config["Jwt:ExpiresInMinutes"])),
                 signingCredentials: credentials
             );
 

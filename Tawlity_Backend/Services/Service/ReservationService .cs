@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Tawlity_Backend.Data.Enums;
 using Tawlity_Backend.Dtos;
 using Tawlity_Backend.Models;
 using Tawlity_Backend.Repositories.Interface;
@@ -9,65 +8,122 @@ public class ReservationService : IReservationService
 {
     private readonly IReservationRepository _reservationRepository;
     private readonly IUserRepository _userRepository;
-    private readonly IMapper _mapper;
+    private readonly EmailService _emailService; // Inject Email Service
 
-    public ReservationService(IReservationRepository reservationRepository, IUserRepository userRepository, IMapper mapper)
+    public ReservationService(IReservationRepository reservationRepository, IUserRepository userRepository, EmailService emailService)
     {
         _reservationRepository = reservationRepository;
         _userRepository = userRepository;
-        _mapper = mapper;
+        _emailService = emailService;
     }
 
     public async Task<IEnumerable<ReservationResponseDto>> GetAllReservationsAsync()
     {
         var reservations = await _reservationRepository.GetAllReservationsAsync();
-        return _mapper.Map<IEnumerable<ReservationResponseDto>>(reservations);
+        return reservations.Select(r => new ReservationResponseDto
+        {
+            Id = r.Id,
+            RestaurantId = r.RestaurantId,
+            UserId = r.UserId,
+            TableId = r.TableId,
+            ReservationDate = r.ReservationDate,
+            ReservationTime = r.ReservationTime,
+            PeopleCount = r.PeopleCount,
+            Status = r.Status.ToString()
+        });
     }
 
     public async Task<IEnumerable<ReservationResponseDto>> GetReservationsByUserIdAsync(int userId)
     {
         var reservations = await _reservationRepository.GetReservationsByUserIdAsync(userId);
-        return _mapper.Map<IEnumerable<ReservationResponseDto>>(reservations);
+        return reservations.Select(r => new ReservationResponseDto
+        {
+            Id = r.Id,
+            RestaurantId = r.RestaurantId,
+            UserId = r.UserId,
+            TableId = r.TableId,
+            ReservationDate = r.ReservationDate,
+            ReservationTime = r.ReservationTime,
+            PeopleCount = r.PeopleCount,
+            Status = r.Status.ToString()
+        });
     }
 
     public async Task<ReservationResponseDto?> GetReservationByIdAsync(int id)
     {
         var reservation = await _reservationRepository.GetReservationByIdAsync(id);
-        return _mapper.Map<ReservationResponseDto>(reservation);
+        if (reservation == null) return null;
+
+        return new ReservationResponseDto
+        {
+            Id = reservation.Id,
+            RestaurantId = reservation.RestaurantId,
+            UserId = reservation.UserId,
+            TableId = reservation.TableId,
+            ReservationDate = reservation.ReservationDate,
+            ReservationTime = reservation.ReservationTime,
+            PeopleCount = reservation.PeopleCount,
+            Status = reservation.Status.ToString()
+        };
     }
 
-    void IReservationService.AddReservationAsync(int userId, ReservationDto reservationDto)
+    public async Task<bool> AddReservationAsync(int userId, ReservationDto reservationDto)
     {
-            var reservation = new Reservation
-            {
-                RestaurantId = reservationDto.RestaurantId,
-                UserId = userId, // Assign the logged-in user ID
-                TableId = reservationDto.TableId,
-                ReservationDate = reservationDto.ReservationDate,
-                ReservationTime = reservationDto.ReservationTime,
-                PeopleCount = reservationDto.PeopleCount,
-                Status = reservationDto.Status,
-                OrderItems = reservationDto.OrderItems.Select(x => new OrderItem
-                {
-                    MenuItem = new MenuItem
-                    {
-                        Price = x.Price,
-                        Name = x.Name,
-                    }
-                }).ToList()
-            };
-        if (reservation == null)
+        var user = await _userRepository.GetUserByIdAsync(userId);
+        if (user == null)
+            throw new Exception("User not found.");
+
+        var reservation = new Reservation
         {
-            throw new Exception("Enter data");
-        }
-        _reservationRepository.AddReservationAsync(reservation);
+            RestaurantId = reservationDto.RestaurantId,
+            UserId = userId,
+            TableId = reservationDto.TableId,
+            ReservationDate = reservationDto.ReservationDate,
+            ReservationTime = reservationDto.ReservationTime,
+            PeopleCount = reservationDto.PeopleCount,
+            OrderItems=reservationDto.OrderItems.Select(x=>new OrderItem
+            {
+                MenuItem=new MenuItem
+                {
+                    Name = x.Name,
+                    Price = x.Price
+                }
+            }).ToList(),
+            Status = reservationDto.Status
+        };
+
+         await _reservationRepository.AddReservationAsync(reservation);
+
+        // Send confirmation email
+        await _emailService.SendEmailAsync(user.EmployeeEmail, "Reservation Confirmation", $@"
+        Dear {user.EmployeeName},  
+        Your reservation at restaurant ID {reservationDto.RestaurantId} is confirmed.  
+        📅 Date: {reservationDto.ReservationDate}  
+        ⏰ Time: {reservationDto.ReservationTime}  
+        👥 People: {reservationDto.PeopleCount}  
+        Thank you for choosing our service!
+    ");
+        return true;
     }
+
     public async Task<bool> UpdateReservationAsync(int id, UpdateReservationDto updatedReservationDto)
     {
         var existingReservation = await _reservationRepository.GetReservationByIdAsync(id);
         if (existingReservation == null) return false;
 
-        _mapper.Map(updatedReservationDto, existingReservation);
+        existingReservation.ReservationDate = updatedReservationDto.ReservationDate;
+        existingReservation.ReservationTime = updatedReservationDto.ReservationTime;
+        existingReservation.PeopleCount = updatedReservationDto.PeopleCount;
+        // ✅ Convert String to Enum
+        if (Enum.TryParse(updatedReservationDto.Status, out Reservation_Status status))
+        {
+            existingReservation.Status = status;
+        }
+        else
+        {
+            throw new Exception("Invalid reservation status provided.");
+        }
+
         await _reservationRepository.UpdateReservationAsync(existingReservation);
         return true;
     }
@@ -80,5 +136,4 @@ public class ReservationService : IReservationService
         await _reservationRepository.DeleteReservationAsync(id);
         return true;
     }
-
 }
