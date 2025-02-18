@@ -58,6 +58,9 @@ builder.Services.AddScoped<Login_IRepo, Login_Repo>();
 builder.Services.AddScoped<Login_IService, Login_Service>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
+builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+
 builder.Services.AddSingleton<EmailService>();
 builder.Services.Configure<EmailService>(builder.Configuration.GetSection("EmailSettings"));
 

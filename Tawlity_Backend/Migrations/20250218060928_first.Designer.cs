@@ -12,7 +12,7 @@ using Tawlity_Backend.Data;
 namespace Tawlity_Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250217173425_first")]
+    [Migration("20250218060928_first")]
     partial class first
     {
         /// <inheritdoc />
@@ -556,7 +556,7 @@ namespace Tawlity_Backend.Migrations
                             EmployeeCreditCard = "1234567812345678",
                             EmployeeEmail = "ezzm80618@gmail.com",
                             EmployeeGender = 0,
-                            EmployeeName = "Ahmed Ali",
+                            EmployeeName = "Ezzeldeen Mohamed",
                             EmployeePassword = "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=",
                             EmployeePhone = "01234567890",
                             Employee_Role = 2,
@@ -586,7 +586,7 @@ namespace Tawlity_Backend.Migrations
                             EmployeeCity = 0,
                             EmployeeConfirmPassword = "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=",
                             EmployeeCreditCard = "2345678923456789",
-                            EmployeeEmail = "ezzm806@gmail.com",
+                            EmployeeEmail = "ezzedeen.0522029@gmail.com",
                             EmployeeGender = 0,
                             EmployeeName = "Ezzeldeen",
                             EmployeePassword = "4HMqQ3k88d+UXom+uWf3UNrFF9YdgyJkRbg/sTnXrtQ=",

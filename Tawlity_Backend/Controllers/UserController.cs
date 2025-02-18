@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Tawlity.Core.Enums;
 using Tawlity_Backend.Dtos;
 using Tawlity_Backend.Services.IService;
@@ -51,6 +52,23 @@ namespace Tawlity_Backend.Controllers
             var deleted = await _userService.DeleteUserAsync(id);
             return deleted ? NoContent() : NotFound("User not found.");
         }
+        //[HttpGet("Profile")]
+        //public async Task<IActionResult> GetUserProfile()
+        //{
+        //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get logged-in user's ID
+        //    //if (userId == null) return Unauthorized("User not authenticated.");
+
+        //    var user = await _userService.GetUserByIdAsync(int.Parse(userId));
+        //    if (user == null) return NotFound("User not found.");
+
+        //    return Ok(new
+        //    {
+        //        user.EmployeeId,
+        //        user.EmployeeName,
+        //        user.EmployeeEmail,
+        //        user.EmployeeCity
+        //    });
+        //}
 
     }
 }

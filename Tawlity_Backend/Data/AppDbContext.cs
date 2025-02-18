@@ -158,12 +158,12 @@ namespace Tawlity_Backend.Data
                 });
             // ✅ إضافة مطاعم بدون تكرار `UserId` الخطأ
             modelBuilder.Entity<Restaurant>().HasData(
-                new Restaurant { Id = 1, Name = "Tawlity Restaurant1", Address = "Cairo", Latitude = 30.0444, Longitude = 39.2357, UserId = 2 },
-                new Restaurant { Id = 2, Name = "Restaurant2", Address = "Tanta", Latitude = 35.0454, Longitude = 38.2357, UserId = 3 },
-                new Restaurant { Id = 3, Name = "Restaurant3", Address = "Banha", Latitude = 20.0644, Longitude = 61.4357, UserId = 3 },
-                new Restaurant { Id = 4, Name = "Restaurant4", Address = "Alex", Latitude = 44.0444, Longitude = 21.2357, UserId = 2 },
-                new Restaurant { Id = 5, Name = "Restaurant5", Address = "Giza", Latitude = 10.0444, Longitude = 35.2357, UserId = 3 },
-                new Restaurant { Id = 6, Name = "Restaurant6", Address = "Luxor", Latitude = 12.1234, Longitude = 32.5678, UserId = 2 }
+                new Restaurant { Id = 1,Description="This restaurant is very nice to to use for every one.",Phone="01147790490", Name = "Tawlity Restaurant1", Address = "Cairo", Latitude = 30.0444, Longitude = 39.2357, UserId = 2 },
+                new Restaurant { Id = 2,Description="This restaurant is very nice to to use for every one.",Phone="01147790498", Name = "Restaurant2", Address = "Tanta", Latitude = 35.0454, Longitude = 38.2357, UserId = 3 },
+                new Restaurant { Id = 3,Description="This restaurant is very nice to to use for every one.",Phone="01147790465", Name = "Restaurant3", Address = "Banha", Latitude = 20.0644, Longitude = 61.4357, UserId = 3 },
+                new Restaurant { Id = 4,Description="This restaurant is very nice to to use for every one.",Phone="01147790488", Name = "Restaurant4", Address = "Alex", Latitude = 44.0444, Longitude = 21.2357, UserId = 2 },
+                new Restaurant { Id = 5,Description="This restaurant is very nice to to use for every one.",Phone="01147790467", Name = "Restaurant5", Address = "Giza", Latitude = 10.0444, Longitude = 35.2357, UserId = 3 },
+                new Restaurant { Id = 6,Description="This restaurant is very nice to to use for every one.",Phone="01147790468", Name = "Restaurant6", Address = "Luxor", Latitude = 12.1234, Longitude = 32.5678, UserId = 2 }
             );
 
             // ✅ إضافة 6 طاولات
