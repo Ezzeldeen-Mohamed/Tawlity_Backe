@@ -8,6 +8,7 @@ namespace Tawlity_Backend.Services.IService
         Task<IEnumerable<RestaurantDto>> GetAllAsync();
         Task<RestaurantDto?> GetByIdAsync(int id);
         Task<RestaurantDto> CreateAsync(CreateRestaurantDto dto);
+        Task<CreateRestaurantwithmenuDto?> GetByIdWithMenuAsync(int id);
         Task<bool> UpdateAsync(int id, UpdateRestaurantDto dto);
         Task<bool> DeleteAsync(int id);
         Task<IEnumerable<RestaurantDto>> SearchAsync(string query);

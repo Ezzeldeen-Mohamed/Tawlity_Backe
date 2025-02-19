@@ -23,15 +23,15 @@ namespace Tawlity_Backend.Controllers
             return Ok(await _service.GetAllAsync());
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("with-menu/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var restaurant = await _service.GetByIdAsync(id);
+            var restaurant = await _service.GetByIdWithMenuAsync(id);
             return restaurant != null ? Ok(restaurant) : NotFound();
         }
 
         [HttpPost]
-       // [Authorize(Roles = "Admin,RestaurantOwner")]
+        [Authorize(Roles = "Admin,RestaurantOwner")]
         public async Task<IActionResult> Create([FromBody] CreateRestaurantDto dto)
         {
             if (!ModelState.IsValid)
@@ -42,7 +42,7 @@ namespace Tawlity_Backend.Controllers
         }
 
         [HttpPut("{id}")]
-      //  [Authorize(Roles = "Admin,RestaurantOwner")]
+        [Authorize(Roles = "Admin,RestaurantOwner")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateRestaurantDto dto)
         {
             if (!ModelState.IsValid)
@@ -53,7 +53,7 @@ namespace Tawlity_Backend.Controllers
         }
 
         [HttpDelete("{id}")]
-      //  [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _service.DeleteAsync(id);

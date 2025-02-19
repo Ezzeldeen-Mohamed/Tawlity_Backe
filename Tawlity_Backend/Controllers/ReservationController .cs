@@ -51,7 +51,7 @@ public class ReservationController : ControllerBase
 
     // 🔹 POST: /api/reservations (Create Reservation)
     [HttpPost]
-    //[Authorize]
+    [Authorize]
     public async Task<IActionResult> CreateReservation([FromBody] ReservationDto reservationDto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -60,7 +60,7 @@ public class ReservationController : ControllerBase
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
             if (userId == 0) return Unauthorized("Invalid user token");
 
-            await _reservationService.AddReservationAsync(userId, reservationDto);
+             _reservationService.AddReservationAsync(userId, reservationDto);
             return Ok(new { message = "Reservation created successfully" });
         }
         catch (Exception ex)

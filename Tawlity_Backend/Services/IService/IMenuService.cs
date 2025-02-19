@@ -6,6 +6,6 @@ namespace Tawlity_Backend.Services.IService
     {
         Task<IEnumerable<MenuItemDto>> GetMenuItemsByRestaurantIdAsync(int restaurantId);
         Task<MenuItemDto?> GetMenuItemByIdAsync(int id);
-        Task AddMenuItemAsync(CreateMenuItemDto menuItemDto);
+        Task AddMenuItemAsync(CreateMetemDto menuItemDto);
     }
 }

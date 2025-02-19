@@ -52,6 +52,28 @@ namespace Tawlity_Backend.Controllers
             var deleted = await _userService.DeleteUserAsync(id);
             return deleted ? NoContent() : NotFound("User not found.");
         }
+
+        [HttpGet("user-info")]
+        [Authorize(Roles ="Admin")]
+        public IActionResult GetUserInfo()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userRole))
+            {
+                return Unauthorized(new { message = "Invalid user token." });
+            }
+
+            return Ok(new
+            {
+                UserId = userId,
+                Role = userRole
+            });
+        }
+
+
+
         //[HttpGet("Profile")]
         //public async Task<IActionResult> GetUserProfile()
         //{

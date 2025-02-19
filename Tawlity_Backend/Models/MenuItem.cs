@@ -7,6 +7,7 @@ namespace Tawlity_Backend.Models
     {
         [Key]
         public int Id { get; set; }
+        public string? MenuItemImage { get; set; }
 
         [Required]
         [StringLength(100)]

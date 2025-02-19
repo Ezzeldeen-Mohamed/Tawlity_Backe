@@ -63,6 +63,8 @@ builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
+builder.Services.AddScoped<IMenuRepository, MenuRepository>();
+builder.Services.AddScoped<IMenuService, MenuService>();
 
 
 builder.Services.AddSingleton<EmailService>();
@@ -82,7 +84,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 // Add Authentication with JWT Bearer   
-builder.Services.AddAuthentication("Bearer")
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -96,9 +98,10 @@ builder.Services.AddAuthentication("Bearer")
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
-
     });
+
 builder.Services.AddAuthorization();
+
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -129,7 +132,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminOrOwner", policy =>
+    options.AddPolicy("AdminOrRestaurantOwner", policy =>
         policy.RequireAssertion(context =>
         {
             var roleClaim = context.User.FindFirst(ClaimTypes.Role);

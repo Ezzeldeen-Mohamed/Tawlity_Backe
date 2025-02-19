@@ -15,7 +15,7 @@ namespace Tawlity_Backend.Models
 
             [StringLength(500)]
             public string ?Description { get; set; }
-
+            public string ? RestaurantImage {  get; set; }
             [Phone]
             public string ?Phone { get; set; }
             public string ?Address { get; set; }

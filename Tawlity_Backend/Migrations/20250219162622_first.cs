@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Tawlity_Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class fir : Migration
+    public partial class first : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -45,6 +45,7 @@ namespace Tawlity_Backend.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    RestaurantImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Latitude = table.Column<double>(type: "float", nullable: false),
@@ -68,6 +69,7 @@ namespace Tawlity_Backend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    MenuItemImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -213,28 +215,28 @@ namespace Tawlity_Backend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Restaurants",
-                columns: new[] { "Id", "Address", "Description", "Latitude", "Longitude", "Name", "Phone", "UserId" },
+                columns: new[] { "Id", "Address", "Description", "Latitude", "Longitude", "Name", "Phone", "RestaurantImage", "UserId" },
                 values: new object[,]
                 {
-                    { 1, "Cairo", null, 30.0444, 39.235700000000001, "Tawlity Restaurant1", null, 2 },
-                    { 2, "Tanta", null, 35.045400000000001, 38.235700000000001, "Restaurant2", null, 3 },
-                    { 3, "Banha", null, 20.064399999999999, 61.435699999999997, "Restaurant3", null, 3 },
-                    { 4, "Alex", null, 44.044400000000003, 21.235700000000001, "Restaurant4", null, 2 },
-                    { 5, "Giza", null, 10.0444, 35.235700000000001, "Restaurant5", null, 3 },
-                    { 6, "Luxor", null, 12.1234, 32.567799999999998, "Restaurant6", null, 2 }
+                    { 1, "Cairo", "This restaurant is very nice to to use for every one.", 30.0444, 39.235700000000001, "Tawlity Restaurant1", "01147790490", "https://www.google.com/imgres?q=restaurants&imgurl=https%3A%2F%2Fcdn.vox-cdn.com%2Fuploads%2Fchorus_image%2Fimage%2F62582192%2FIMG_2025.280.jpg&imgrefurl=https%3A%2F%2Fsandiego.eater.com%2Fmaps%2F38-best-restaurants-san-diego-california&docid=q8YKW0oQDtjkVM&tbnid=AARg1jNdAWZT6M&vet=12ahUKEwiNkabvj9CLAxWiQ_EDHRyhHmIQM3oECHMQAA..i&w=6240&h=4160&hcb=2&ved=2ahUKEwiNkabvj9CLAxWiQ_EDHRyhHmIQM3oECHMQAA", 1 },
+                    { 2, "Tanta", "This restaurant is very nice to to use for every one.", 35.045400000000001, 38.235700000000001, "Restaurant2", "01147790498", "https://www.google.com/imgres?q=restaurants&imgurl=https%3A%2F%2Fwinecountry-media.s3.amazonaws.com%2Fwp-content%2Fuploads%2Fsites%2F4%2F2024%2F07%2F11110433%2Fshutterstock_1678594945-1880x880-1.jpg&imgrefurl=https%3A%2F%2Fwww.napavalley.com%2Fblog%2Fbest-restaurants-in-napa-valley%2F&docid=UzoJ77pi4QAAtM&tbnid=RsFv41nJx8e2LM&vet=12ahUKEwiNkabvj9CLAxWiQ_EDHRyhHmIQM3oECB0QAA..i&w=1880&h=880&hcb=2&ved=2ahUKEwiNkabvj9CLAxWiQ_EDHRyhHmIQM3oECB0QAA", 4 },
+                    { 3, "Banha", "This restaurant is very nice to to use for every one.", 20.064399999999999, 61.435699999999997, "Restaurant3", "01147790465", "https://www.google.com/imgres?q=restaurants&imgurl=https%3A%2F%2Fmedia.cntraveler.com%2Fphotos%2F654bd5e13892537a8ded0947%2F16%3A9%2Fw_2560%252Cc_limit%2Fphy2023.din.oss.restaurant-lr.jpg&imgrefurl=https%3A%2F%2Fwww.cntraveler.com%2Fstory%2Fbest-dubai-restaurants&docid=wZqceSbkuJPClM&tbnid=AvpLM5IF-eEjLM&vet=12ahUKEwiNkabvj9CLAxWiQ_EDHRyhHmIQM3oECFcQAA..i&w=2560&h=1440&hcb=2&ved=2ahUKEwiNkabvj9CLAxWiQ_EDHRyhHmIQM3oECFcQAA", 4 },
+                    { 4, "Alex", "This restaurant is very nice to to use for every one.", 44.044400000000003, 21.235700000000001, "Restaurant4", "01147790488", "https://www.google.com/imgres?q=restaurants&imgurl=https%3A%2F%2Fimages.axios.com%2FwATq4W23ahtn_smTbli4sm0yPnM%3D%2F0x73%3A1300x804%2F1920x1080%2F2024%2F07%2F18%2F1721312331120.jpg%3Fw%3D3840&imgrefurl=https%3A%2F%2Fwww.axios.com%2Flocal%2Fcharlotte%2F2024%2F07%2F19%2Fbest-restaurants-charlotte-2024&docid=p0q79u4kU0Cg2M&tbnid=nfEMMyUQUPvlKM&vet=12ahUKEwiNkabvj9CLAxWiQ_EDHRyhHmIQM3oECB4QAA..i&w=1920&h=1080&hcb=2&ved=2ahUKEwiNkabvj9CLAxWiQ_EDHRyhHmIQM3oECB4QAA", 1 },
+                    { 5, "Giza", "This restaurant is very nice to to use for every one.", 10.0444, 35.235700000000001, "Restaurant5", "01147790467", "https://www.google.com/imgres?q=restaurants&imgurl=https%3A%2F%2Fwinecountry-media.s3.amazonaws.com%2Fwp-content%2Fuploads%2Fsites%2F4%2F2024%2F07%2F11110433%2Fshutterstock_1678594945-1880x880-1.jpg&imgrefurl=https%3A%2F%2Fwww.napavalley.com%2Fblog%2Fbest-restaurants-in-napa-valley%2F&docid=UzoJ77pi4QAAtM&tbnid=RsFv41nJx8e2LM&vet=12ahUKEwiNkabvj9CLAxWiQ_EDHRyhHmIQM3oECB0QAA..i&w=1880&h=880&hcb=2&ved=2ahUKEwiNkabvj9CLAxWiQ_EDHRyhHmIQM3oECB0QAA", 5 },
+                    { 6, "Luxor", "This restaurant is very nice to to use for every one.", 12.1234, 32.567799999999998, "Restaurant6", "01147790468", "https://www.google.com/imgres?q=restaurants&imgurl=https%3A%2F%2Fdynamic-media-cdn.tripadvisor.com%2Fmedia%2Fphoto-o%2F2a%2F24%2Fb1%2F8f%2Fview-from-sky-deck.jpg%3Fw%3D600%26h%3D-1%26s%3D1&imgrefurl=https%3A%2F%2Fwww.tripadvisor.com%2FRestaurants-g298573-Manila_Metro_Manila_Luzon.html&docid=r3rbGpE1VVSxAM&tbnid=oQTnJncwVo5mnM&vet=12ahUKEwiNkabvj9CLAxWiQ_EDHRyhHmIQM3oECFUQAA..i&w=600&h=400&hcb=2&ved=2ahUKEwiNkabvj9CLAxWiQ_EDHRyhHmIQM3oECFUQAA", 5 }
                 });
 
             migrationBuilder.InsertData(
                 table: "MenuItems",
-                columns: new[] { "Id", "Description", "Name", "Price", "RestaurantId" },
+                columns: new[] { "Id", "Description", "MenuItemImage", "Name", "Price", "RestaurantId" },
                 values: new object[,]
                 {
-                    { 1, "Delicious pasta", "Pasta", 50m, 1 },
-                    { 2, "Tasty pizza", "Pizza", 100m, 1 },
-                    { 3, "Juicy burger", "Burger", 80m, 2 },
-                    { 4, "Fresh salad", "Salad", 30m, 3 },
-                    { 5, "Grilled steak", "Steak", 200m, 4 },
-                    { 6, "Hot soup", "Soup", 25m, 5 }
+                    { 1, "Delicious pasta", "https://www.google.com/imgres?q=Delicious%20pasta&imgurl=https%3A%2F%2Fae-parenting.s3.ap-south-1.amazonaws.com%2F2018%2F04%2F275882210-H.jpg&imgrefurl=https%3A%2F%2Fparenting.firstcry.ae%2Farticles%2F15-easy-and-yummy-pasta-recipe-for-kids%2F&docid=c9nOAPHejMHBxM&tbnid=hzqvpSwLRDpBrM&vet=12ahUKEwjPiKOzkdCLAxU3BNsEHbcSBjwQM3oECH8QAA..i&w=1024&h=700&hcb=2&ved=2ahUKEwjPiKOzkdCLAxU3BNsEHbcSBjwQM3oECH8QAA", "Pasta", 50m, 1 },
+                    { 2, "Tasty pizza", "https://www.google.com/imgres?q=Tasty%20pizza&imgurl=https%3A%2F%2Fmedia.istockphoto.com%2Fid%2F938742222%2Fphoto%2Fcheesy-pepperoni-pizza.jpg%3Fs%3D612x612%26w%3D0%26k%3D20%26c%3DD1z4xPCs-qQIZyUqRcHrnsJSJy_YbUD9udOrXpilNpI%3D&imgrefurl=https%3A%2F%2Fwww.istockphoto.com%2Fphotos%2Ftasty-pizza-close-up&docid=OXpXwXDjbStycM&tbnid=FbKDrRBh9q9x0M&vet=12ahUKEwjCpbLBkdCLAxUecvEDHfRPGikQM3oECBYQAA..i&w=612&h=459&hcb=2&ved=2ahUKEwjCpbLBkdCLAxUecvEDHfRPGikQM3oECBYQAA", "Pizza", 100m, 1 },
+                    { 3, "Juicy burger", "https://www.google.com/imgres?q=Juicy%20burger&imgurl=https%3A%2F%2Fbutchershopinc.com%2Fwp-content%2Fuploads%2F2024%2F05%2Fjuicy-grilled-burgers-scaled.jpeg&imgrefurl=https%3A%2F%2Fbutchershopinc.com%2F2024%2F05%2Fjuicy-grilled-burgers%2F&docid=5YiZMoYl5gUdmM&tbnid=27V3YW0aANLAHM&vet=12ahUKEwjC8P3RkdCLAxU7SPEDHZtfFNMQM3oECFYQAA..i&w=2560&h=1707&hcb=2&ved=2ahUKEwjC8P3RkdCLAxU7SPEDHZtfFNMQM3oECFYQAA", "Burger", 80m, 2 },
+                    { 4, "Fresh salad", "https://www.google.com/imgres?q=Fresh%20salad&imgurl=https%3A%2F%2Fimages.immediate.co.uk%2Fproduction%2Fvolatile%2Fsites%2F30%2F2014%2F05%2FEpic-summer-salad-hub-2646e6e.jpg&imgrefurl=https%3A%2F%2Fwww.bbcgoodfood.com%2Frecipes%2Fcollection%2Fsalad-recipes&docid=-1YYOjHeqWR61M&tbnid=_6L-FTqnPgAEEM&vet=12ahUKEwjKwJLhkdCLAxWrB9sEHftBB0IQM3oECFQQAA..i&w=3384&h=3076&hcb=2&ved=2ahUKEwjKwJLhkdCLAxWrB9sEHftBB0IQM3oECFQQAA", "Salad", 30m, 3 },
+                    { 5, "Grilled steak", "https://www.google.com/imgres?q=Grilled%20steak&imgurl=https%3A%2F%2Fiowagirleats.com%2Fwp-content%2Fuploads%2F2024%2F09%2FPerfect-Grilled-Steak-with-Herb-Butter-iowagirleats-Featured-1200x2-1.jpg&imgrefurl=https%3A%2F%2Fiowagirleats.com%2Fperfect-grilled-steak-with-herb-butter%2F&docid=XxM3xR2x5reS0M&tbnid=NuVWbgW4OnxeTM&vet=12ahUKEwivjbvvkdCLAxVzR_EDHdrEMTgQM3oECGUQAA..i&w=1200&h=1200&hcb=2&ved=2ahUKEwivjbvvkdCLAxVzR_EDHdrEMTgQM3oECGUQAA", "Steak", 200m, 4 },
+                    { 6, "Hot soup", "https://www.google.com/imgres?q=Hot%20soup&imgurl=https%3A%2F%2Fwww.chilitochoc.com%2Fwp-content%2Fuploads%2F2021%2F01%2Fchinese-hot-and-sour-soup-sq.jpg&imgrefurl=https%3A%2F%2Fwww.chilitochoc.com%2Fchinese-hot-and-sour-soup%2F&docid=zJN6OgQdVbrmDM&tbnid=MIF6fOIFDFKlqM&vet=12ahUKEwiT17OBktCLAxXUX_EDHV0RAjoQM3oECBwQAA..i&w=1141&h=1141&hcb=2&ved=2ahUKEwiT17OBktCLAxXUX_EDHV0RAjoQM3oECBwQAA", "Soup", 25m, 5 }
                 });
 
             migrationBuilder.InsertData(

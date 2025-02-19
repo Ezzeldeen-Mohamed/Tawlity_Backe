@@ -81,9 +81,9 @@ public class ReservationService : IReservationService
             ReservationDate = reservationDto.ReservationDate,
             ReservationTime = reservationDto.ReservationTime,
             PeopleCount = reservationDto.PeopleCount,
-            OrderItems=reservationDto.OrderItems.Select(x=>new OrderItem
+            OrderItems = reservationDto.OrderItems.Select(x => new OrderItem
             {
-                MenuItem=new MenuItem
+                MenuItem = new MenuItem
                 {
                     Name = x.Name,
                     Price = x.Price
@@ -92,7 +92,7 @@ public class ReservationService : IReservationService
             Status = reservationDto.Status
         };
 
-         await _reservationRepository.AddReservationAsync(reservation);
+        await _reservationRepository.AddReservationAsync(reservation);
 
         // Send confirmation email
         await _emailService.SendEmailAsync(user.EmployeeEmail, "Reservation Confirmation", $@"
