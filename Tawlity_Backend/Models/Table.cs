@@ -7,7 +7,7 @@ namespace Tawlity_Backend.Models
     {
         [Key]
         public int Id { get; set; }
-
+        public string ?Name { get; set; }    
         [Required]
         [Range(1, 20)]
         public int Capacity { get; set; }

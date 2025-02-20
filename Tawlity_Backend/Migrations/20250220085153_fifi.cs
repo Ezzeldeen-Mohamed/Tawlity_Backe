@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Tawlity_Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class first : Migration
+    public partial class fifi : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -123,6 +123,7 @@ namespace Tawlity_Backend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Capacity = table.Column<int>(type: "int", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RestaurantId = table.Column<int>(type: "int", nullable: false)
@@ -241,15 +242,15 @@ namespace Tawlity_Backend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Tables",
-                columns: new[] { "Id", "Capacity", "ImageUrl", "RestaurantId" },
+                columns: new[] { "Id", "Capacity", "ImageUrl", "Name", "RestaurantId" },
                 values: new object[,]
                 {
-                    { 1, 4, "table1.jpg", 1 },
-                    { 2, 6, "table2.jpg", 1 },
-                    { 3, 2, "table3.jpg", 2 },
-                    { 4, 8, "table4.jpg", 3 },
-                    { 5, 10, "table5.jpg", 4 },
-                    { 6, 12, "table6.jpg", 5 }
+                    { 1, 4, "table1.jpg", "Table1", 1 },
+                    { 2, 6, "table2.jpg", "Table2", 1 },
+                    { 3, 2, "table3.jpg", "Table3", 2 },
+                    { 4, 8, "table4.jpg", "Table4", 3 },
+                    { 5, 10, "table5.jpg", "Table5", 4 },
+                    { 6, 12, "table6.jpg", "Table6", 5 }
                 });
 
             migrationBuilder.InsertData(

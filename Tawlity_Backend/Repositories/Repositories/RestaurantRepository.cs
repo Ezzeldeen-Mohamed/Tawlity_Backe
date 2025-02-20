@@ -23,6 +23,7 @@ namespace Tawlity_Backend.Repositories.Repositories
         public async Task<Restaurant?> GetByIdAsync(int id)
         {
             return await _context.Restaurants
+                .Include(r=>r.Tables)
                 .Include(r => r.MenuItems)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }

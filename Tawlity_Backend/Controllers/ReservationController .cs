@@ -60,7 +60,7 @@ public class ReservationController : ControllerBase
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
             if (userId == 0) return Unauthorized("Invalid user token");
 
-             _reservationService.AddReservationAsync(userId, reservationDto);
+            await _reservationService.AddReservationAsync(userId, reservationDto);
             return Ok(new { message = "Reservation created successfully" });
         }
         catch (Exception ex)

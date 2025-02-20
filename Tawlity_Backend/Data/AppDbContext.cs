@@ -39,6 +39,11 @@ namespace Tawlity_Backend.Data
                 .WithOne(p => p.Restaurant)
                 .HasForeignKey(p => p.RestaurantId)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Restaurant>()
+                 .HasMany(r => r.Tables)
+                 .WithOne(p => p.Restaurant)
+                 .HasForeignKey(p => p.RestaurantId)
+                 .OnDelete(DeleteBehavior.Cascade);
 
             // 👇 علاقات الحجز مع المستخدم والمطعم والطاولة
             modelBuilder.Entity<Reservation>()
@@ -168,12 +173,12 @@ namespace Tawlity_Backend.Data
 
             // ✅ إضافة 6 طاولات
             modelBuilder.Entity<Table>().HasData(
-                new Table { Id = 1, Capacity = 4, ImageUrl = "table1.jpg", RestaurantId = 1 },
-                new Table { Id = 2, Capacity = 6, ImageUrl = "table2.jpg", RestaurantId = 1 },
-                new Table { Id = 3, Capacity = 2, ImageUrl = "table3.jpg", RestaurantId = 2 },
-                new Table { Id = 4, Capacity = 8, ImageUrl = "table4.jpg", RestaurantId = 3 },
-                new Table { Id = 5, Capacity = 10, ImageUrl = "table5.jpg", RestaurantId = 4 },
-                new Table { Id = 6, Capacity = 12, ImageUrl = "table6.jpg", RestaurantId = 5 }
+                new Table { Id = 1, Capacity = 4, ImageUrl = "table1.jpg", RestaurantId = 1 ,Name="Table1"},
+                new Table { Id = 2, Capacity = 6, ImageUrl = "table2.jpg", RestaurantId = 1 ,Name="Table2"},
+                new Table { Id = 3, Capacity = 2, ImageUrl = "table3.jpg", RestaurantId = 2 ,Name="Table3"},
+                new Table { Id = 4, Capacity = 8, ImageUrl = "table4.jpg", RestaurantId = 3 ,Name="Table4"},
+                new Table { Id = 5, Capacity = 10, ImageUrl = "table5.jpg", RestaurantId = 4,Name="Table5"},
+                new Table { Id = 6, Capacity = 12, ImageUrl = "table6.jpg", RestaurantId = 5,Name="Table6"}
             );
 
             // ✅ إضافة 6 أطعمة إلى قائمة الطعام

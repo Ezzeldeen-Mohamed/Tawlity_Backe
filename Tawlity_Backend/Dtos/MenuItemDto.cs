@@ -14,7 +14,7 @@ namespace Tawlity_Backend.Dtos
     public class MenuItemD
     {
         public string Name { get; set; }
-        public string? MenuItemImage { get; set; }
+        public string? MenuItemImage { get; set; }=string.Empty;
 
         public decimal Price { get; set; }
     } 

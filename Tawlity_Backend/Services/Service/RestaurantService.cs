@@ -81,6 +81,7 @@ namespace Tawlity_Backend.Services.Service
                 Latitude = restaurant.Latitude,
                 Longitude = restaurant.Longitude,
                 UserId = restaurant.UserId,
+                
                 MenuItems=restaurant.MenuItems.Select(x=>new CreateMenuItemDto
                 {
                     Name=x.Name,
@@ -88,6 +89,14 @@ namespace Tawlity_Backend.Services.Service
                     Price=x.Price,
                     Description=x.Description
                 } ).ToList(),
+                Tables = restaurant.Tables.Select(t => new TableDto // ✅ جلب الطاولات أيضًا
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    Capacity = t.Capacity,
+                    ImageUrl = t.ImageUrl,
+                    RestaurantId=t.RestaurantId
+                }).ToList() ?? new List<TableDto>(),
             };
         }
 

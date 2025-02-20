@@ -31,7 +31,9 @@ namespace Tawlity_Backend.Models
             [ForeignKey("User")]
             public int UserId { get; set; }
             public virtual User? User { get; set; }
-            public virtual ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();    
+            public virtual ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();  
+            public virtual ICollection<Table> Tables { get; set; } = new HashSet<Table>();  
+        
             public virtual ICollection<MenuItem> MenuItems { get; set; } = new HashSet<MenuItem>();
         
         }

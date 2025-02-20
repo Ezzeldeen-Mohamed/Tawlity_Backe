@@ -2,8 +2,8 @@
 using Tawlity_Backend.Services.IService;
 using Tawlity_Backend.Dtos;
 
-[Route("api/tables")]
 [ApiController]
+[Route("api/[controller]")]
 public class TableController : ControllerBase
 {
     private readonly ITableService _tableService;
@@ -13,9 +13,6 @@ public class TableController : ControllerBase
         _tableService = tableService;
     }
 
-    // 🔹 GET: /api/tables/branch/{branchId}
-
-    // 🔹 GET: /api/tables/{id}
     [HttpGet("{id}")]
     public async Task<IActionResult> GetTableById(int id)
     {
@@ -25,7 +22,6 @@ public class TableController : ControllerBase
         return Ok(table);
     }
 
-    // 🔹 POST: /api/tables
     [HttpPost]
     public async Task<IActionResult> AddTable([FromBody] CreateTableDto tableDto)
     {
@@ -35,7 +31,6 @@ public class TableController : ControllerBase
         return Ok(new { message = "Table added successfully." });
     }
 
-    // 🔹 DELETE: /api/tables/{id}
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTable(int id)
     {

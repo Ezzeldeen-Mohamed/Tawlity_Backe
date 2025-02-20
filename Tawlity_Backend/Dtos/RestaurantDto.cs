@@ -53,6 +53,7 @@ namespace Tawlity_Backend.Dtos
         public int UserId { get; set; }  // مالك المطعم
 
         public List<CreateMenuItemDto> MenuItems { get; set; } = new();
+        public List<TableDto> Tables { get; set; } = new();
     }
     public class CreateMenuItemDto
     {

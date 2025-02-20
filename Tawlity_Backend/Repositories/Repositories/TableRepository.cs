@@ -33,7 +33,7 @@ namespace Tawlity_Backend.Repositories.Repositories
                 _context.Tables.Remove(table);
                 await _context.SaveChangesAsync();
             }
-
         }
     }
+
 }

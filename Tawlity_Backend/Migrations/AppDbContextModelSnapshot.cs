@@ -416,6 +416,9 @@ namespace Tawlity_Backend.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("RestaurantId")
                         .HasColumnType("int");
 
@@ -431,6 +434,7 @@ namespace Tawlity_Backend.Migrations
                             Id = 1,
                             Capacity = 4,
                             ImageUrl = "table1.jpg",
+                            Name = "Table1",
                             RestaurantId = 1
                         },
                         new
@@ -438,6 +442,7 @@ namespace Tawlity_Backend.Migrations
                             Id = 2,
                             Capacity = 6,
                             ImageUrl = "table2.jpg",
+                            Name = "Table2",
                             RestaurantId = 1
                         },
                         new
@@ -445,6 +450,7 @@ namespace Tawlity_Backend.Migrations
                             Id = 3,
                             Capacity = 2,
                             ImageUrl = "table3.jpg",
+                            Name = "Table3",
                             RestaurantId = 2
                         },
                         new
@@ -452,6 +458,7 @@ namespace Tawlity_Backend.Migrations
                             Id = 4,
                             Capacity = 8,
                             ImageUrl = "table4.jpg",
+                            Name = "Table4",
                             RestaurantId = 3
                         },
                         new
@@ -459,6 +466,7 @@ namespace Tawlity_Backend.Migrations
                             Id = 5,
                             Capacity = 10,
                             ImageUrl = "table5.jpg",
+                            Name = "Table5",
                             RestaurantId = 4
                         },
                         new
@@ -466,6 +474,7 @@ namespace Tawlity_Backend.Migrations
                             Id = 6,
                             Capacity = 12,
                             ImageUrl = "table6.jpg",
+                            Name = "Table6",
                             RestaurantId = 5
                         });
                 });
@@ -714,7 +723,7 @@ namespace Tawlity_Backend.Migrations
             modelBuilder.Entity("Tawlity_Backend.Models.Table", b =>
                 {
                     b.HasOne("Tawlity_Backend.Models.Restaurant", "Restaurant")
-                        .WithMany()
+                        .WithMany("Tables")
                         .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -737,6 +746,8 @@ namespace Tawlity_Backend.Migrations
                     b.Navigation("MenuItems");
 
                     b.Navigation("Payments");
+
+                    b.Navigation("Tables");
                 });
 
             modelBuilder.Entity("Tawlity_Backend.Models.Table", b =>
