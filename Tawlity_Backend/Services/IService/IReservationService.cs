@@ -10,7 +10,8 @@ namespace Tawlity_Backend.Services.IService
         Task<ReservationResponseDto?> GetReservationByIdAsync(int id);
         Task<IEnumerable<ReservationResponseDto>> GetReservationsByUserIdAsync(int userId);
         Task<IEnumerable<ReservationResponseDto>> GetAllReservationsAsync();
-        Task<bool> AddReservationAsync(int userId, ReservationDto reservationDto);
+        Task<bool> AddReservationAsync(ReservationDto reservationDto);
+
     }
 
 }

@@ -52,7 +52,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(x =>
-    x.UseSqlServer(builder.Configuration.GetConnectionString("connection")));
+    x.UseSqlServer(builder.Configuration.GetConnectionString("connection")).EnableSensitiveDataLogging());
 
 
 builder.Services.AddScoped<Login_IRepo, Login_Repo>();

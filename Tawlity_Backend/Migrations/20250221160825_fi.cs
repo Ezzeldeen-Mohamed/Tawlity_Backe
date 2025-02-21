@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Tawlity_Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class fifi : Migration
+    public partial class fi : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -145,10 +145,11 @@ namespace Tawlity_Backend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ReservationDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    ReservationTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    ReservationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReservationTime = table.Column<TimeSpan>(type: "time", nullable: false),
                     PeopleCount = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
+                    EmployeeEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     TableId = table.Column<int>(type: "int", nullable: false),
                     RestaurantId = table.Column<int>(type: "int", nullable: false)
@@ -183,7 +184,8 @@ namespace Tawlity_Backend.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     ReservationId = table.Column<int>(type: "int", nullable: false),
-                    MenuItemId = table.Column<int>(type: "int", nullable: false)
+                    MenuItemId = table.Column<int>(type: "int", nullable: false),
+                    MenuItemId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -194,6 +196,11 @@ namespace Tawlity_Backend.Migrations
                         principalTable: "MenuItems",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrderItems_MenuItems_MenuItemId1",
+                        column: x => x.MenuItemId1,
+                        principalTable: "MenuItems",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_OrderItems_Reservations_ReservationId",
                         column: x => x.ReservationId,
@@ -255,15 +262,15 @@ namespace Tawlity_Backend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Reservations",
-                columns: new[] { "Id", "PeopleCount", "ReservationDate", "ReservationTime", "RestaurantId", "Status", "TableId", "UserId" },
+                columns: new[] { "Id", "EmployeeEmail", "PeopleCount", "ReservationDate", "ReservationTime", "RestaurantId", "Status", "TableId", "UserId" },
                 values: new object[,]
                 {
-                    { 1, 2, new DateOnly(2025, 3, 10), new TimeOnly(19, 0, 0), 1, 2, 1, 4 },
-                    { 2, 4, new DateOnly(2025, 4, 15), new TimeOnly(20, 30, 0), 2, 1, 2, 5 },
-                    { 3, 6, new DateOnly(2025, 5, 5), new TimeOnly(18, 0, 0), 3, 2, 3, 4 },
-                    { 4, 8, new DateOnly(2025, 6, 20), new TimeOnly(21, 45, 0), 4, 3, 4, 5 },
-                    { 5, 3, new DateOnly(2025, 7, 7), new TimeOnly(17, 30, 0), 5, 1, 5, 4 },
-                    { 6, 5, new DateOnly(2025, 8, 12), new TimeOnly(22, 0, 0), 6, 2, 6, 5 }
+                    { 1, "ezzedeen.0522029@gmail.com", 2, new DateTime(2025, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 19, 0, 0, 0), 1, 2, 1, 3 },
+                    { 2, "ezzedeen.0522029@gmail.com", 4, new DateTime(2025, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 20, 30, 0, 0), 2, 1, 2, 3 },
+                    { 3, "ezzedeen.0522029@gmail.com", 6, new DateTime(2025, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 18, 0, 0, 0), 3, 2, 3, 3 },
+                    { 4, "ezzedeen.0522029@gmail.com", 8, new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 21, 45, 0, 0), 4, 3, 4, 3 },
+                    { 5, "ezzedeen.0522029@gmail.com", 3, new DateTime(2025, 7, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 17, 30, 0, 0), 5, 1, 5, 3 },
+                    { 6, "ezzedeen.0522029@gmail.com", 5, new DateTime(2025, 8, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 22, 0, 0, 0), 6, 2, 6, 3 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -275,6 +282,11 @@ namespace Tawlity_Backend.Migrations
                 name: "IX_OrderItems_MenuItemId",
                 table: "OrderItems",
                 column: "MenuItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_MenuItemId1",
+                table: "OrderItems",
+                column: "MenuItemId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_ReservationId",

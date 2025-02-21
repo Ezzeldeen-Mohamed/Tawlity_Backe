@@ -100,7 +100,11 @@ namespace Tawlity_Backend.Data
                 .WithMany(u => u.Restaurants)
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Restrict); // ✅ يمنع الحذف المتكرر
-
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(oi => oi.MenuItem)
+                .WithMany()
+                .HasForeignKey(oi => oi.MenuItemId)
+                .OnDelete(DeleteBehavior.Cascade);
             // 🔹 العلاقة بين Reservation و Table
             modelBuilder.Entity<Reservation>()
                 .HasOne(r => r.Table)
@@ -193,12 +197,12 @@ namespace Tawlity_Backend.Data
 
             // ✅ إضافة 6 حجوزات
             modelBuilder.Entity<Reservation>().HasData(
-                new Reservation { Id = 1, ReservationDate = new DateOnly(2025, 3, 10), ReservationTime = new TimeOnly(19, 00), PeopleCount = 2, Status = Reservation_Status.Confirmed, UserId = 4, TableId = 1, RestaurantId = 1 },
-                new Reservation { Id = 2, ReservationDate = new DateOnly(2025, 4, 15), ReservationTime = new TimeOnly(20, 30), PeopleCount = 4, Status = Reservation_Status.Pending, UserId = 5, TableId = 2, RestaurantId = 2 },
-                new Reservation { Id = 3, ReservationDate = new DateOnly(2025, 5, 5), ReservationTime = new TimeOnly(18, 00), PeopleCount = 6, Status = Reservation_Status.Confirmed, UserId = 4, TableId = 3, RestaurantId = 3 },
-                new Reservation { Id = 4, ReservationDate = new DateOnly(2025, 6, 20), ReservationTime = new TimeOnly(21, 45), PeopleCount = 8, Status = Reservation_Status.Cancelled, UserId = 5, TableId = 4, RestaurantId = 4 },
-                new Reservation { Id = 5, ReservationDate = new DateOnly(2025, 7, 7), ReservationTime = new TimeOnly(17, 30), PeopleCount = 3, Status = Reservation_Status.Pending, UserId = 4, TableId = 5, RestaurantId = 5 },
-                new Reservation { Id = 6, ReservationDate = new DateOnly(2025, 8, 12), ReservationTime = new TimeOnly(22, 00), PeopleCount = 5, Status = Reservation_Status.Confirmed, UserId = 5, TableId = 6, RestaurantId = 6 }
+                new Reservation { Id = 1, ReservationDate = new DateTime(2025, 3, 10), ReservationTime = new TimeSpan(19, 00,00), PeopleCount = 2, Status = Reservation_Status.Confirmed, UserId = 3, TableId = 1, RestaurantId = 1,EmployeeEmail="ezzedeen.0522029@gmail.com" },
+                new Reservation { Id = 2, ReservationDate = new DateTime(2025, 4, 15), ReservationTime = new TimeSpan(20, 30, 0), PeopleCount = 4, Status = Reservation_Status.Pending, UserId = 3, TableId = 2, RestaurantId = 2, EmployeeEmail = "ezzedeen.0522029@gmail.com" },
+                new Reservation { Id = 3, ReservationDate = new DateTime(2025, 5, 5), ReservationTime = new TimeSpan(18, 00, 0), PeopleCount = 6, Status = Reservation_Status.Confirmed, UserId = 3, TableId = 3, RestaurantId = 3, EmployeeEmail = "ezzedeen.0522029@gmail.com" },
+                new Reservation { Id = 4, ReservationDate = new DateTime(2025, 6, 20), ReservationTime = new TimeSpan(21, 45, 0), PeopleCount = 8, Status = Reservation_Status.Cancelled, UserId = 3, TableId = 4, RestaurantId = 4, EmployeeEmail = "ezzedeen.0522029@gmail.com" },
+                new Reservation { Id = 5, ReservationDate = new DateTime(2025, 7, 7), ReservationTime = new TimeSpan(17, 30, 0), PeopleCount = 3, Status = Reservation_Status.Pending, UserId = 3, TableId = 5, RestaurantId = 5 , EmployeeEmail = "ezzedeen.0522029@gmail.com" },
+                new Reservation { Id = 6, ReservationDate = new DateTime(2025, 8, 12), ReservationTime = new TimeSpan(22, 00, 0), PeopleCount = 5, Status = Reservation_Status.Confirmed, UserId = 3, TableId = 6, RestaurantId = 6 , EmployeeEmail = "ezzedeen.0522029@gmail.com" }
             );
         } 
 

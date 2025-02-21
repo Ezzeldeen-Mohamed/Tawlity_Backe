@@ -10,6 +10,7 @@ namespace Tawlity_Backend.Repositories.Interface
         Task AddUserAsync(User user);
         Task UpdateUserAsync(User user);
         void DeleteUser(User user);
+        Task<User?> GetUserByEmailAsync(string email);
         Task<bool> SaveChangesAsync();
     }
 }

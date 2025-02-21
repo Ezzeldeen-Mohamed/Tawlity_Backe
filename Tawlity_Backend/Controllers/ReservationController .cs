@@ -11,15 +11,16 @@ using Tawlity_Backend.SomeThingsWeWillUseInTheFuther;
 public class ReservationController : ControllerBase
 {
     private readonly IReservationService _reservationService;
-
-    public ReservationController(IReservationService reservationService)
+    private readonly ILogger<ReservationController> loger;
+    public ReservationController(ILogger<ReservationController> loge, IReservationService reservationService)
     {
+        loger = loge;
         _reservationService = reservationService;
     }
 
     // 🔹 GET: /api/reservations (Admin Only)
     [HttpGet]
-   // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAllReservations()
     {
         var reservations = await _reservationService.GetAllReservationsAsync();
@@ -50,24 +51,39 @@ public class ReservationController : ControllerBase
     }
 
     // 🔹 POST: /api/reservations (Create Reservation)
+    //[Authorize]
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> CreateReservation([FromBody] ReservationDto reservationDto)
     {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         try
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-            if (userId == 0) return Unauthorized("Invalid user token");
-
-            await _reservationService.AddReservationAsync(userId, reservationDto);
-            return Ok(new { message = "Reservation created successfully" });
+            bool success = await _reservationService.AddReservationAsync(reservationDto);
+            if (success)
+                return Ok(new { message = "Reservation created successfully" });
+            else
+                return BadRequest(new { message = "Failed to create reservation" });
         }
         catch (Exception ex)
         {
-            return BadRequest(new { message = ex.Message });
+            loger.LogError(ex, "Error while creating reservation");
+
+            if (ex.InnerException != null)
+            {
+                return BadRequest(new
+                {
+                    message = "Reservation error: " + ex.Message,
+                    innerException = ex.InnerException?.Message, // ✅ عرض الخطأ الداخلي
+                    stackTrace = ex.StackTrace // ✅ عرض مسار الخطأ
+                });
+            }
+
+            return BadRequest(new { message = $"Reservation error: {ex.Message}" });
         }
     }
+
 
     // 🔹 PUT: /api/reservations/{id} (Update Reservation)
     [HttpPut("{id}")]

@@ -45,6 +45,17 @@
                 RestaurantId = menuItem.RestaurantId
             };
         }
+        public async Task<MenuItemD?> GetMenuItemByNameAsync(MenuItemD menuItemD)
+        {
+            var menuItem = await _menuRepository.GetMenuItemByNameAsync(menuItemD.Name);
+            if (menuItem == null) return null;
+
+            return new MenuItemD
+            {
+                Name = menuItem.Name,
+                //Price=menuItem.Price
+            };
+        }
 
         public async Task AddMenuItemAsync(CreateMetemDto menuItemDto)
         {

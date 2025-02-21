@@ -12,8 +12,8 @@ using Tawlity_Backend.Data;
 namespace Tawlity_Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250220085153_fifi")]
-    partial class fifi
+    [Migration("20250221160825_fi")]
+    partial class fi
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -125,6 +125,9 @@ namespace Tawlity_Backend.Migrations
                     b.Property<int>("MenuItemId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("MenuItemId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -134,6 +137,8 @@ namespace Tawlity_Backend.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("MenuItemId");
+
+                    b.HasIndex("MenuItemId1");
 
                     b.HasIndex("ReservationId");
 
@@ -189,13 +194,17 @@ namespace Tawlity_Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("EmployeeEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PeopleCount")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("ReservationDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("ReservationDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<TimeOnly>("ReservationTime")
+                    b.Property<TimeSpan>("ReservationTime")
                         .HasColumnType("time");
 
                     b.Property<int>("RestaurantId")
@@ -224,68 +233,74 @@ namespace Tawlity_Backend.Migrations
                         new
                         {
                             Id = 1,
+                            EmployeeEmail = "ezzedeen.0522029@gmail.com",
                             PeopleCount = 2,
-                            ReservationDate = new DateOnly(2025, 3, 10),
-                            ReservationTime = new TimeOnly(19, 0, 0),
+                            ReservationDate = new DateTime(2025, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ReservationTime = new TimeSpan(0, 19, 0, 0, 0),
                             RestaurantId = 1,
                             Status = 2,
                             TableId = 1,
-                            UserId = 4
+                            UserId = 3
                         },
                         new
                         {
                             Id = 2,
+                            EmployeeEmail = "ezzedeen.0522029@gmail.com",
                             PeopleCount = 4,
-                            ReservationDate = new DateOnly(2025, 4, 15),
-                            ReservationTime = new TimeOnly(20, 30, 0),
+                            ReservationDate = new DateTime(2025, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ReservationTime = new TimeSpan(0, 20, 30, 0, 0),
                             RestaurantId = 2,
                             Status = 1,
                             TableId = 2,
-                            UserId = 5
+                            UserId = 3
                         },
                         new
                         {
                             Id = 3,
+                            EmployeeEmail = "ezzedeen.0522029@gmail.com",
                             PeopleCount = 6,
-                            ReservationDate = new DateOnly(2025, 5, 5),
-                            ReservationTime = new TimeOnly(18, 0, 0),
+                            ReservationDate = new DateTime(2025, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ReservationTime = new TimeSpan(0, 18, 0, 0, 0),
                             RestaurantId = 3,
                             Status = 2,
                             TableId = 3,
-                            UserId = 4
+                            UserId = 3
                         },
                         new
                         {
                             Id = 4,
+                            EmployeeEmail = "ezzedeen.0522029@gmail.com",
                             PeopleCount = 8,
-                            ReservationDate = new DateOnly(2025, 6, 20),
-                            ReservationTime = new TimeOnly(21, 45, 0),
+                            ReservationDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ReservationTime = new TimeSpan(0, 21, 45, 0, 0),
                             RestaurantId = 4,
                             Status = 3,
                             TableId = 4,
-                            UserId = 5
+                            UserId = 3
                         },
                         new
                         {
                             Id = 5,
+                            EmployeeEmail = "ezzedeen.0522029@gmail.com",
                             PeopleCount = 3,
-                            ReservationDate = new DateOnly(2025, 7, 7),
-                            ReservationTime = new TimeOnly(17, 30, 0),
+                            ReservationDate = new DateTime(2025, 7, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ReservationTime = new TimeSpan(0, 17, 30, 0, 0),
                             RestaurantId = 5,
                             Status = 1,
                             TableId = 5,
-                            UserId = 4
+                            UserId = 3
                         },
                         new
                         {
                             Id = 6,
+                            EmployeeEmail = "ezzedeen.0522029@gmail.com",
                             PeopleCount = 5,
-                            ReservationDate = new DateOnly(2025, 8, 12),
-                            ReservationTime = new TimeOnly(22, 0, 0),
+                            ReservationDate = new DateTime(2025, 8, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ReservationTime = new TimeSpan(0, 22, 0, 0, 0),
                             RestaurantId = 6,
                             Status = 2,
                             TableId = 6,
-                            UserId = 5
+                            UserId = 3
                         });
                 });
 
@@ -651,10 +666,14 @@ namespace Tawlity_Backend.Migrations
             modelBuilder.Entity("Tawlity_Backend.Models.OrderItem", b =>
                 {
                     b.HasOne("Tawlity_Backend.Models.MenuItem", "MenuItem")
-                        .WithMany("OrderItems")
+                        .WithMany()
                         .HasForeignKey("MenuItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Tawlity_Backend.Models.MenuItem", null)
+                        .WithMany("OrderItems")
+                        .HasForeignKey("MenuItemId1");
 
                     b.HasOne("Tawlity_Backend.Models.Reservation", "Reservation")
                         .WithMany("OrderItems")

@@ -10,5 +10,7 @@ namespace Tawlity_Backend.Repositories.Interface
         Task AddReservationAsync(Reservation reservation);
         Task UpdateReservationAsync(Reservation reservation);
         Task DeleteReservationAsync(int id);
+        Task<bool> TableIsReservedAsync(int tableId, DateTime date, TimeSpan time);
+
     }
 }

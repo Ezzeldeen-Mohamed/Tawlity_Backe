@@ -10,15 +10,19 @@ namespace Tawlity_Backend.Models
         public int Id { get; set; }
 
         [Required]
-        public DateOnly ReservationDate{ get; set; }   //make here is date time and add new parameter data only 
-        public TimeOnly ReservationTime { get; set; }   
+        public DateTime ReservationDate{ get; set; }   //make here is date time and add new parameter data only 
+        public TimeSpan ReservationTime { get; set; }   
      
         [Required]
         [Range(1, 2000)]
         public int PeopleCount { get; set; }
 
         [Required]
-        public Reservation_Status? Status { get; set; } 
+        public Reservation_Status Status { get; set; } = Reservation_Status.Pending; // تعيين قيمة افتراضية
+
+
+        [EmailAddress]
+        public string EmployeeEmail { get; set; }
 
         // Relationships
 

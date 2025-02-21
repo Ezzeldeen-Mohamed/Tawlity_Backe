@@ -19,7 +19,10 @@ namespace Tawlity_Backend.Repositories.Repositories
         {
             return await _context.Employees.ToListAsync();
         }
-
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            return await _context.Employees.FirstOrDefaultAsync(x => x.EmployeeEmail == email);
+        }
         public async Task<User?> GetUserByIdAsync(int id)
         {
             return await _context.Employees.FindAsync(id);

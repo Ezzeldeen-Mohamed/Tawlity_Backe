@@ -67,8 +67,17 @@ namespace Tawlity_Backend.Services.Service
                 Employee_Role=Employee_Role.Customer
             };
 
+
             // Save the employee to the database
             await _repository.AddEmployeeAsync(employee);
+
+            // Send confirmation email
+            await _emailService.SendEmailAsync(registerDto.EmployeeEmail, "Welcome to Tawlity 🎉", $@"
+                <h2>Hello {registerDto.EmployeeName},</h2>
+                <p>Thank you for registering on <b>Tawlity</b>! 🎉</p>
+                <p>You can now start making restaurant reservations and enjoy our services.</p>
+                <p>Best regards,<br/>The Tawlity Team</p>
+                  ");
 
             // Generate and return a JWT token for the registered user
             return GenerateJwtToken(employee);
