@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Tawlity_Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class fi : Migration
+    public partial class Cascad : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -152,7 +152,8 @@ namespace Tawlity_Backend.Migrations
                     EmployeeEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     TableId = table.Column<int>(type: "int", nullable: false),
-                    RestaurantId = table.Column<int>(type: "int", nullable: false)
+                    RestaurantId = table.Column<int>(type: "int", nullable: false),
+                    RestaurantId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -169,6 +170,11 @@ namespace Tawlity_Backend.Migrations
                         principalTable: "Restaurants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Restaurants_RestaurantId1",
+                        column: x => x.RestaurantId1,
+                        principalTable: "Restaurants",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Reservations_Tables_TableId",
                         column: x => x.TableId,
@@ -262,15 +268,15 @@ namespace Tawlity_Backend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Reservations",
-                columns: new[] { "Id", "EmployeeEmail", "PeopleCount", "ReservationDate", "ReservationTime", "RestaurantId", "Status", "TableId", "UserId" },
+                columns: new[] { "Id", "EmployeeEmail", "PeopleCount", "ReservationDate", "ReservationTime", "RestaurantId", "RestaurantId1", "Status", "TableId", "UserId" },
                 values: new object[,]
                 {
-                    { 1, "ezzedeen.0522029@gmail.com", 2, new DateTime(2025, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 19, 0, 0, 0), 1, 2, 1, 3 },
-                    { 2, "ezzedeen.0522029@gmail.com", 4, new DateTime(2025, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 20, 30, 0, 0), 2, 1, 2, 3 },
-                    { 3, "ezzedeen.0522029@gmail.com", 6, new DateTime(2025, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 18, 0, 0, 0), 3, 2, 3, 3 },
-                    { 4, "ezzedeen.0522029@gmail.com", 8, new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 21, 45, 0, 0), 4, 3, 4, 3 },
-                    { 5, "ezzedeen.0522029@gmail.com", 3, new DateTime(2025, 7, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 17, 30, 0, 0), 5, 1, 5, 3 },
-                    { 6, "ezzedeen.0522029@gmail.com", 5, new DateTime(2025, 8, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 22, 0, 0, 0), 6, 2, 6, 3 }
+                    { 1, "ezzedeen.0522029@gmail.com", 2, new DateTime(2025, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 19, 0, 0, 0), 1, null, 2, 1, 3 },
+                    { 2, "ezzedeen.0522029@gmail.com", 4, new DateTime(2025, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 20, 30, 0, 0), 2, null, 1, 2, 3 },
+                    { 3, "ezzedeen.0522029@gmail.com", 6, new DateTime(2025, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 18, 0, 0, 0), 3, null, 2, 3, 3 },
+                    { 4, "ezzedeen.0522029@gmail.com", 8, new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 21, 45, 0, 0), 4, null, 3, 4, 3 },
+                    { 5, "ezzedeen.0522029@gmail.com", 3, new DateTime(2025, 7, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 17, 30, 0, 0), 5, null, 1, 5, 3 },
+                    { 6, "ezzedeen.0522029@gmail.com", 5, new DateTime(2025, 8, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 22, 0, 0, 0), 6, null, 2, 6, 3 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -307,6 +313,11 @@ namespace Tawlity_Backend.Migrations
                 name: "IX_Reservations_RestaurantId",
                 table: "Reservations",
                 column: "RestaurantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_RestaurantId1",
+                table: "Reservations",
+                column: "RestaurantId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_TableId",

@@ -65,5 +65,14 @@ namespace Tawlity_Backend.Dtos
         public string? EmployeeName { get; set; }
         public string? EmployeePhone { get; set; }
         public Employee_City? EmployeeCity { get; set; }
-    } 
+    }
+
+    public class UserProfileDto
+    {
+        public string FullName { get; set; }
+        public string Email { get; set; }
+        public string Address { get; set; }
+
+    }
+
 }

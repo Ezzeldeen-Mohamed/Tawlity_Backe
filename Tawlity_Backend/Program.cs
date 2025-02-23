@@ -68,7 +68,6 @@ builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<ITableRepository, TableRepository>();
 builder.Services.AddScoped<ITableService, TableService>();
 
-
 builder.Services.AddSingleton<EmailService>();
 builder.Services.Configure<EmailService>(builder.Configuration.GetSection("EmailSettings"));
 

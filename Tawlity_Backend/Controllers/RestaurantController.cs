@@ -42,7 +42,7 @@ namespace Tawlity_Backend.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin,RestaurantOwner")]
+        //[Authorize(Roles = "Admin,RestaurantOwner")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateRestaurantDto dto)
         {
             if (!ModelState.IsValid)
@@ -52,8 +52,8 @@ namespace Tawlity_Backend.Controllers
             return result ? NoContent() : NotFound();
         }
 
+        //[Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _service.DeleteAsync(id);

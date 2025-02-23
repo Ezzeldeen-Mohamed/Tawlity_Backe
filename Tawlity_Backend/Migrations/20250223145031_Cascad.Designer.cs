@@ -12,8 +12,8 @@ using Tawlity_Backend.Data;
 namespace Tawlity_Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250221160825_fi")]
-    partial class fi
+    [Migration("20250223145031_Cascad")]
+    partial class Cascad
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -210,6 +210,9 @@ namespace Tawlity_Backend.Migrations
                     b.Property<int>("RestaurantId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("RestaurantId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -222,6 +225,8 @@ namespace Tawlity_Backend.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("RestaurantId");
+
+                    b.HasIndex("RestaurantId1");
 
                     b.HasIndex("TableId");
 
@@ -712,6 +717,10 @@ namespace Tawlity_Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Tawlity_Backend.Models.Restaurant", null)
+                        .WithMany("Reservations")
+                        .HasForeignKey("RestaurantId1");
+
                     b.HasOne("Tawlity_Backend.Models.Table", "Table")
                         .WithMany("Reservations")
                         .HasForeignKey("TableId")
@@ -768,6 +777,8 @@ namespace Tawlity_Backend.Migrations
                     b.Navigation("MenuItems");
 
                     b.Navigation("Payments");
+
+                    b.Navigation("Reservations");
 
                     b.Navigation("Tables");
                 });

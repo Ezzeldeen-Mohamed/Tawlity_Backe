@@ -20,7 +20,7 @@ public class ReservationController : ControllerBase
 
     // 🔹 GET: /api/reservations (Admin Only)
     [HttpGet]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAllReservations()
     {
         var reservations = await _reservationService.GetAllReservationsAsync();

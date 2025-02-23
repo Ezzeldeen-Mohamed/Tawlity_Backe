@@ -160,6 +160,7 @@ namespace Tawlity_Backend.Services.Service
             return await _repository.DeleteAsync(id);
         }
 
+
         public async Task<IEnumerable<RestaurantDto>> SearchAsync(string query)
         {
             var restaurants = await _repository.SearchAsync(query);

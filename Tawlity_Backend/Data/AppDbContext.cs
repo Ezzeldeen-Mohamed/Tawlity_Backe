@@ -44,6 +44,18 @@ namespace Tawlity_Backend.Data
                  .WithOne(p => p.Restaurant)
                  .HasForeignKey(p => p.RestaurantId)
                  .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Table>()
+                .HasOne(t => t.Restaurant)
+                .WithMany(r => r.Tables)
+                .HasForeignKey(t => t.RestaurantId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Reservation>()
+                .HasOne(r => r.Table)
+                .WithMany(t => t.Reservations)
+                .HasForeignKey(r => r.TableId)
+                .OnDelete(DeleteBehavior.Cascade);
+
 
             // 👇 علاقات الحجز مع المستخدم والمطعم والطاولة
             modelBuilder.Entity<Reservation>()

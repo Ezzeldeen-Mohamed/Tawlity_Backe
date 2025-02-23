@@ -33,6 +33,7 @@ namespace Tawlity_Backend.Models
             public virtual User? User { get; set; }
             public virtual ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();  
             public virtual ICollection<Table> Tables { get; set; } = new HashSet<Table>();  
+            public virtual ICollection<Reservation> Reservations { get; set; } = new HashSet<Reservation>();  
         
             public virtual ICollection<MenuItem> MenuItems { get; set; } = new HashSet<MenuItem>();
         

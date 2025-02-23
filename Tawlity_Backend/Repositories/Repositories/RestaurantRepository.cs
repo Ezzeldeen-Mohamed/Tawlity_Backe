@@ -43,12 +43,20 @@ namespace Tawlity_Backend.Repositories.Repositories
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var restaurant = await _context.Restaurants.FindAsync(id);
+            var restaurant = await _context.Restaurants
+                    .Include(r => r.Reservations)
+                    .Include(r => r.Tables)
+                    .Include (r => r.MenuItems)
+                    .Include(r=>r.User)
+                    .FirstOrDefaultAsync(r => r.Id == id);
+
             if (restaurant == null) return false;
 
             _context.Restaurants.Remove(restaurant);
             return await _context.SaveChangesAsync() > 0;
         }
+
+
 
         public async Task<IEnumerable<Restaurant>> SearchAsync(string query)
         {

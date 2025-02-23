@@ -39,5 +39,14 @@ namespace Tawlity_Backend.Dtos
         public List<OrderItemDto> OrderItems { get; set; } = new List<OrderItemDto>(); // ✅ Used Here
     }
 
+    public class ReservationForProfileDto
+    {
+        public int UserId { get; set; }
+        public int ReservationId { get; set; }
+        public DateTime ReservationDate { get; set; }
+        public string RestaurantName { get; set; }
+    }
+
+
 
 }
