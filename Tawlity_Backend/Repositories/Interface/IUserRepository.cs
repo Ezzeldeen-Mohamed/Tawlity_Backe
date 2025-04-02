@@ -7,6 +7,7 @@ namespace Tawlity_Backend.Repositories.Interface
     {
         Task<IEnumerable<User>> GetAllUsersAsync();
         Task<User?> GetUserByIdAsync(int id);
+        Task<User?> GetUserProfileByIdAsync(int id);
         Task AddUserAsync(User user);
         Task UpdateUserAsync(User user);
         void DeleteUser(User user);

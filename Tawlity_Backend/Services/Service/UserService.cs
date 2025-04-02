@@ -51,6 +51,21 @@ namespace Tawlity_Backend.Services.Service
                 EmployeeCreditCard = user.EmployeeCreditCard
             };
         }
+        public async Task<UserProfileDto?> GetUserProfileByIdAsync(int id)
+        {
+            var user = await _userRepository.GetUserProfileByIdAsync(id);
+            return user == null ? null : new UserProfileDto
+            {
+                FullName=user.EmployeeName,
+                Email=user.EmployeeEmail,
+                Address=user.EmployeeCity.ToString(),
+                reservationForProfiles=user.Reservations.Select(x=>new ReservationForProfileDto
+                {
+                    ReservationDate=x.ReservationDate,
+                    RestaurantName = x.Restaurant?.Name ?? "Unknown"
+                }).ToList() ?? new List<ReservationForProfileDto>()
+            };
+        }
 
         public async Task AddUserAsync(CreateUserDto dto)
         {

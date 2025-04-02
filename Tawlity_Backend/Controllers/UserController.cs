@@ -73,6 +73,12 @@ namespace Tawlity_Backend.Controllers
         //}
 
 
+        [HttpGet("Profile/{id}")]
+        public async Task<IActionResult> GetUserProfileById(int id)
+        {
+            var user = await _userService.GetUserProfileByIdAsync(id);
+            return user != null ? Ok(user) : NotFound("User not found.");
+        }
 
         [HttpGet("Profile")]
         public async Task<IActionResult> GetUserProfile()
@@ -91,6 +97,7 @@ namespace Tawlity_Backend.Controllers
                 user.EmployeeCity
             });
         }
+        
 
     }
 }

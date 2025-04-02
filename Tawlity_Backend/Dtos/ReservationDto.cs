@@ -41,8 +41,6 @@ namespace Tawlity_Backend.Dtos
 
     public class ReservationForProfileDto
     {
-        public int UserId { get; set; }
-        public int ReservationId { get; set; }
         public DateTime ReservationDate { get; set; }
         public string RestaurantName { get; set; }
     }

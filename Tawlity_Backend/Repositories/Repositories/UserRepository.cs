@@ -27,6 +27,13 @@ namespace Tawlity_Backend.Repositories.Repositories
         {
             return await _context.Employees.FindAsync(id);
         }
+        public async Task<User?> GetUserProfileByIdAsync(int id)
+        {
+            return await _context.Employees
+                .Include(x=>x.Reservations)
+                .ThenInclude(x=>x.Restaurant)
+                .FirstOrDefaultAsync(x=>x.EmployeeId==id);
+        }
 
         public async Task AddUserAsync(User user)
         {

@@ -7,6 +7,7 @@ namespace Tawlity_Backend.Services.IService
     {
         Task<IEnumerable<UsersDto>> GetAllUsersAsync();
         Task<UsersDto?> GetUserByIdAsync(int id);
+        Task<UserProfileDto?> GetUserProfileByIdAsync(int id);
         Task AddUserAsync(CreateUserDto dto);
         Task<bool> UpdateUserAsync(int id, UpdateUserDto dto);
         Task<bool> DeleteUserAsync(int id);

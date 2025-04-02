@@ -103,6 +103,10 @@ namespace Tawlity_Backend.Dtos
         public List<CreateMenuItemDto> MenuItems { get; set; } = new();
 
     }
+    public class RestaurnatProfile
+    {
+        public string Name { get; set; } = string.Empty;
+    }
 
 }
 
