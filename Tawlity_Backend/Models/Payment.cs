@@ -18,6 +18,7 @@ namespace Tawlity_Backend.Models
         [Required]
         public string TransactionId { get; set; } // From Stripe/PayPal
 
+
         [Required]
         public string Status { get; set; } // "Completed", "Failed", etc.
 
