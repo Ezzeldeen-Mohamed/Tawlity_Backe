@@ -7,29 +7,37 @@ using Tawlity_Backend.Dtos; // Import DTOs
 public class TableService : ITableService
 {
     private readonly ITableRepository _tableRepository;
-    private readonly IMapper _mapper;
 
-    public TableService(ITableRepository tableRepository, IMapper mapper)
+    public TableService(ITableRepository tableRepository)
     {
         _tableRepository = tableRepository;
-        _mapper = mapper;
-    }
-
-    public async Task<IEnumerable<TableDto>> GetTablesByBranchIdAsync(int branchId)
-    {
-        var tables = await _tableRepository.GetTablesByBranchIdAsync(branchId);
-        return _mapper.Map<IEnumerable<TableDto>>(tables);
     }
 
     public async Task<TableDto?> GetTableByIdAsync(int tableId)
     {
         var table = await _tableRepository.GetTableByIdAsync(tableId);
-        return table == null ? null : _mapper.Map<TableDto>(table);
+        if (table == null) return null;
+
+        // تحويل يدوي من Table إلى TableDto
+        return new TableDto
+        {
+            Id = table.Id,
+            Capacity = table.Capacity,
+            ImageUrl = table.ImageUrl,
+            RestaurantId = table.RestaurantId
+        };
     }
 
     public async Task AddTableAsync(CreateTableDto tableDto)
     {
-        var table = _mapper.Map<Table>(tableDto);
+        // تحويل يدوي من CreateTableDto إلى Table
+        var table = new Table
+        {
+            Capacity = tableDto.Capacity,
+            ImageUrl = tableDto.ImageUrl,
+            RestaurantId = tableDto.RestaurantId
+        };
+
         await _tableRepository.AddTableAsync(table);
     }
 

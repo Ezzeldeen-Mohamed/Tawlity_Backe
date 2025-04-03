@@ -3,79 +3,109 @@ using Microsoft.AspNetCore.Mvc;
 using Tawlity_Backend.Services.IService;
 using Tawlity_Backend.Dtos;
 using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Tawlity_Backend.SomeThingsWeWillUseInTheFuther;
 
-[Route("api/reservations")]
+[Route("api/[Controller]")]
 [ApiController]
 public class ReservationController : ControllerBase
 {
     private readonly IReservationService _reservationService;
-
-    public ReservationController(IReservationService reservationService)
+    private readonly ILogger<ReservationController> loger;
+    public ReservationController(ILogger<ReservationController> loge, IReservationService reservationService)
     {
+        loger = loge;
         _reservationService = reservationService;
     }
 
     // 🔹 GET: /api/reservations (Admin Only)
     [HttpGet]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAllReservations()
     {
         var reservations = await _reservationService.GetAllReservationsAsync();
         return Ok(reservations);
     }
 
-    // 🔹 GET: /api/reservations/user/{userId}
-    [HttpGet("user/{userId}")]
-    [Authorize]
-    public async Task<IActionResult> GetReservationsByUser(int userId)
+    // 🔹 GET: /api/reservations/user (Get logged-in user's reservations)
+    [HttpGet("user")]
+   // [Authorize]
+    public async Task<IActionResult> GetReservationsByUser()
     {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+        if (userId == 0) return Unauthorized("Invalid user token");
+
         var reservations = await _reservationService.GetReservationsByUserIdAsync(userId);
         return Ok(reservations);
     }
 
-
-    // 🔹 PUT: /api/reservations/{id}
-    [HttpPut("{id}")]
-    [Authorize]
-    public async Task<IActionResult> UpdateReservation(int id, [FromBody] UpdateReservationDto updatedReservationDto)
+    // 🔹 GET: /api/reservations/{id} (Admin/User who made the reservation)
+    [HttpGet("{id}")]
+   // [Authorize]
+    public async Task<IActionResult> GetReservationById(int id)
     {
-        var updated = await _reservationService.UpdateReservationAsync(id, updatedReservationDto);
-        if (!updated) return NotFound();
+        var reservation = await _reservationService.GetReservationByIdAsync(id);
+        if (reservation == null) return NotFound("Reservation not found.");
 
-        return Ok(new { message = "Reservation updated successfully" });
+        return Ok(reservation);
     }
 
-    // 🔹 DELETE: /api/reservations/{id}
-    [HttpDelete("{id}")]
-    [Authorize]
-    public async Task<IActionResult> DeleteReservation(int id)
-    {
-        var deleted = await _reservationService.DeleteReservationAsync(id);
-        if (!deleted) return NotFound();
-
-        return Ok(new { message = "Reservation deleted successfully" });
-    }
-
-    // 🔹 POST: /api/reservations
+    // 🔹 POST: /api/reservations (Create Reservation)
+    //[Authorize]
     [HttpPost]
-    [Authorize] // User must be logged in
     public async Task<IActionResult> CreateReservation([FromBody] ReservationDto reservationDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
+
         try
         {
-            // Extract the User ID from the JWT token
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-            if (userId == 0)
-                return Unauthorized("Invalid user token");
-            // Pass user ID to the service
-            _reservationService.AddReservationAsync(userId, reservationDto);
-            return Ok(new { message = "Reservation created successfully" });
+            bool success = await _reservationService.AddReservationAsync(reservationDto);
+            if (success)
+                return Ok(new { message = "Reservation created successfully" });
+            else
+                return BadRequest(new { message = "Failed to create reservation" });
         }
         catch (Exception ex)
         {
-            return BadRequest(ex);
+            loger.LogError(ex, "Error while creating reservation");
+
+            if (ex.InnerException != null)
+            {
+                return BadRequest(new
+                {
+                    message = "Reservation error: " + ex.Message,
+                    innerException = ex.InnerException?.Message, // ✅ عرض الخطأ الداخلي
+                    stackTrace = ex.StackTrace // ✅ عرض مسار الخطأ
+                });
+            }
+
+            return BadRequest(new { message = $"Reservation error: {ex.Message}" });
         }
+    }
+
+
+    // 🔹 PUT: /api/reservations/{id} (Update Reservation)
+    [HttpPut("{id}")]
+   // [Authorize]
+    public async Task<IActionResult> UpdateReservation(int id, [FromBody] UpdateReservationDto updatedReservationDto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var updated = await _reservationService.UpdateReservationAsync(id, updatedReservationDto);
+        if (!updated) return NotFound("Reservation not found.");
+
+        return Ok(new { message = "Reservation updated successfully" });
+    }
+
+    // 🔹 DELETE: /api/reservations/{id} (Cancel/Delete Reservation)
+    [HttpDelete("{id}")]
+    //[Authorize]
+    public async Task<IActionResult> DeleteReservation(int id)
+    {
+        var deleted = await _reservationService.DeleteReservationAsync(id);
+        if (!deleted) return NotFound("Reservation not found.");
+
+        return Ok(new { message = "Reservation deleted successfully" });
     }
 }

@@ -5,13 +5,14 @@ namespace Tawlity_Backend.Services.IService
 {
     public interface IRestaurantService
     {
-        Task<IEnumerable<RestaurantDto>> GetAllRestaurantsAsync();
-        Task<RestaurantDto> GetRestaurantByIdAsync(int id);
-        void CreateRestaurantAsync(CreateRestaurantDto dto);
-
-        Task UpdateRestaurantAsync(int id, UpdateRestaurantDto dto);
-        Task DeleteRestaurantAsync(int id);
-        Task<IEnumerable<RestaurantDto>> SearchRestaurantsAsync(string query);
-        Task<IEnumerable<RestaurantDto>> GetNearbyRestaurantsAsync(double latitude, double longitude, double radiusKm);
+        Task<IEnumerable<RestaurantDto>> GetAllAsync();
+        Task<RestaurantDto?> GetByIdAsync(int id);
+        Task<RestaurantDto> CreateAsync(CreateRestaurantDto dto);
+        Task<CreateRestaurantwithmenuDto?> GetByIdWithMenuAsync(int id);
+        Task<bool> UpdateAsync(int id, UpdateRestaurantDto dto);
+        Task<bool> DeleteAsync(int id);
+        Task<IEnumerable<RestaurantDto>> SearchAsync(string query);
+        Task<IEnumerable<RestaurantDto>> GetNearbyAsync(double lat, double lon, double radius);
     }
+
 }

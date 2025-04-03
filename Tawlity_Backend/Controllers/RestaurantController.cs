@@ -8,11 +8,11 @@ namespace Tawlity_Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RestaurantsController : ControllerBase
+    public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _service;
 
-        public RestaurantsController(IRestaurantService service)
+        public RestaurantController(IRestaurantService service)
         {
             _service = service;
         }
@@ -20,64 +20,57 @@ namespace Tawlity_Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var restaurants = await _service.GetAllRestaurantsAsync();
-            return Ok(restaurants);
+            return Ok(await _service.GetAllAsync());
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("with-menu/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var restaurant = await _service.GetRestaurantByIdAsync(id);
-            return restaurant == null ? NotFound() : Ok(restaurant);
+            var restaurant = await _service.GetByIdWithMenuAsync(id);
+            return restaurant != null ? Ok(restaurant) : NotFound();
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin,RestaurantOwner")]
         public async Task<IActionResult> Create([FromBody] CreateRestaurantDto dto)
         {
-            try
-            {
-                _service.CreateRestaurantAsync(dto);
-                return Ok(dto);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
+            var restaurant = await _service.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = restaurant.Id }, restaurant);
+        }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin,RestaurantOwner")]
+        //[Authorize(Roles = "Admin,RestaurantOwner")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateRestaurantDto dto)
         {
-            await _service.UpdateRestaurantAsync(id, dto);
-            return NoContent();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _service.UpdateAsync(id, dto);
+            return result ? NoContent() : NotFound();
         }
 
+        //[Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _service.DeleteRestaurantAsync(id);
-            return NoContent();
+            var result = await _service.DeleteAsync(id);
+            return result ? NoContent() : NotFound();
         }
 
         [HttpGet("search")]
         public async Task<IActionResult> Search([FromQuery] string query)
         {
-            var results = await _service.SearchRestaurantsAsync(query);
+            var results = await _service.SearchAsync(query);
             return Ok(results);
         }
 
         [HttpGet("nearby")]
-        public async Task<IActionResult> GetNearby(
-            [FromQuery] double lat,
-            [FromQuery] double lon,
-            [FromQuery] double radius = 5)
+        public async Task<IActionResult> GetNearby([FromQuery] double lat, [FromQuery] double lon, [FromQuery] double radius)
         {
-            var results = await _service.GetNearbyRestaurantsAsync(lat, lon, radius);
+            var results = await _service.GetNearbyAsync(lat, lon, radius);
             return Ok(results);
         }
     }

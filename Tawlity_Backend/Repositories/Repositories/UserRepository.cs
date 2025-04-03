@@ -15,39 +15,46 @@ namespace Tawlity_Backend.Repositories.Repositories
             _context = context;
         }
 
-        public async Task<List<User>> GetAllUsersAsync()
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             return await _context.Employees.ToListAsync();
         }
-
-        public async Task<User> GetUserByIdAsync(int id)
+        public async Task<User?> GetUserByEmailAsync(string email)
         {
-            return await _context.Employees.Include(u => u.Employee_Role)
-                                       .FirstOrDefaultAsync(u => u.EmployeeId == id);
+            return await _context.Employees.FirstOrDefaultAsync(x => x.EmployeeEmail == email);
+        }
+        public async Task<User?> GetUserByIdAsync(int id)
+        {
+            return await _context.Employees.FindAsync(id);
+        }
+        public async Task<User?> GetUserProfileByIdAsync(int id)
+        {
+            return await _context.Employees
+                .Include(x=>x.Reservations)
+                .ThenInclude(x=>x.Restaurant)
+                .FirstOrDefaultAsync(x=>x.EmployeeId==id);
         }
 
-        public async Task<bool> UpdateUserAsync(User user)
+        public async Task AddUserAsync(User user)
+        {
+            await _context.Employees.AddAsync(user);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateUserAsync(User user)
         {
             _context.Employees.Update(user);
+            await _context.SaveChangesAsync();
+        }
+
+        public void DeleteUser(User user)
+        {
+            _context.Employees.Remove(user);
+        }
+        public async Task<bool> SaveChangesAsync()
+        {
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> DeleteUserAsync(int id)
-        {
-            var user = await _context.Employees.FindAsync(id);
-            if (user == null) return false;
-
-            _context.Employees .Remove(user);
-            return await _context.SaveChangesAsync() > 0;
-        }
-
-        public async Task<List<Favorite>> GetUserFavoritesAsync(int userId)
-        {
-            return await _context.Favorites.Where(f => f.UserId == userId)
-                                           .Include(f => f.Restaurant)
-                                           .Include(f => f.MenuItem)
-                                           .ToListAsync();
-        }
     }
-
 }

@@ -23,6 +23,12 @@ public class MenuRepository : IMenuRepository
     {
         return await _context.MenuItems.FindAsync(id);
     }
+    public async Task<MenuItem?> GetMenuItemByNameAsync(string name)
+    {
+        return await _context.MenuItems
+            .AsNoTracking()  // 🚀 يحسن الأداء ويمنع المشاكل عند الحفظ
+            .FirstOrDefaultAsync(m => m.Name == name);
+    }
 
     public async Task AddMenuItemAsync(MenuItem menuItem)
     {

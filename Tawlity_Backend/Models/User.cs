@@ -32,24 +32,18 @@ namespace Tawlity_Backend.Models
         public string EmployeeCreditCard { get; set; } = string.Empty;
         public Employee_Role Employee_Role { get; set; }
         public string PasswordHash { get; set; } = string.Empty;
-        public string? ResetToken { get; set; }
-        public DateTime? ResetTokenExpiry { get; set; }
-
-        //public int RoleId { get; set; }
-        //[ForeignKey(nameof(RoleId))]
-        //public virtual Role ?Role { get; set; }
+        public string? ResetToken { get; set; }= string.Empty;
+        public DateTime? ResetTokenExpiry { get; set; }= new DateTime(2025, 3, 10, 19, 00, 00);
 
         // Relationships
-        public virtual Image? Image { get; set; }
+        public virtual ICollection<Restaurant> Restaurants { get; set; } = new HashSet<Restaurant>();
         public virtual ICollection<Reservation> Reservations { get; set; } = new HashSet<Reservation>();
-        public virtual ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
-        public virtual ICollection<Review> Reviews { get; set; } = new HashSet<Review>();
-        public virtual ICollection<CommunityPost> Posts { get; set; } = new HashSet<CommunityPost>();
-        public virtual ICollection<Notification> Notifications { get; set; } = new HashSet<Notification>();
         public virtual ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();
-        public virtual Subscription ?Subscription { get; set; }
-        public virtual ICollection<Favorite> Favorites { get; set; } = new HashSet<Favorite>();
-        public virtual ICollection<CommentLike> CommentLikes { get; set; } = new HashSet<CommentLike>();
 
     }
 }
+
+
+/*
+    do this end points for me do dtos and service and repo and controller don't use mapper or mappester and do relation between the nother tables
+ */

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
+using MimeKit;
 using System.Security.Claims;
 using System.Text;
 using Tawlity.Core.Enums;
@@ -51,57 +52,45 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(x =>
-    x.UseSqlServer(builder.Configuration.GetConnectionString("connection")));
+    x.UseSqlServer(builder.Configuration.GetConnectionString("connection")).EnableSensitiveDataLogging());
 
 
 builder.Services.AddScoped<Login_IRepo, Login_Repo>();
 builder.Services.AddScoped<Login_IService, Login_Service>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IBranchRepository, BranchRepository>();
-builder.Services.AddScoped<IBranchService, BranchService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddSingleton<EmailService>();
-builder.Services.Configure<EmailService>(builder.Configuration.GetSection("EmailSettings"));
-builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
-builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
-builder.Services.AddScoped<IReviewService, ReviewService>();
-builder.Services.AddAutoMapper(typeof(IMapper));
-builder.Services.AddAutoMapper(typeof(BranchProfile));
-builder.Services.AddScoped<ITableRepository, TableRepository>();
-builder.Services.AddScoped<ITableService, TableService>();
+builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
-builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<IMenuRepository, MenuRepository>();
-builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
-builder.Services.AddScoped<IPaymentService, PaymentService>();
-builder.Services.AddScoped<ICommunityPostRepository, CommunityPostRepository>();
-builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-builder.Services.AddScoped<ICommentService, CommentService>();
-builder.Services.AddScoped<ICommentRepository,CommentRepository>();
-builder.Services.AddScoped<IAdminRepository, AdminRepository>();
-builder.Services.AddScoped<IAdminService, AdminService>();
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<IMenuService, MenuService>();
+builder.Services.AddScoped<ITableRepository, TableRepository>();
+builder.Services.AddScoped<ITableService, TableService>();
 
+builder.Services.AddSingleton<EmailService>();
+builder.Services.Configure<EmailService>(builder.Configuration.GetSection("EmailSettings"));
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-});
-
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole(nameof(Employee_Role.Admin)));
-    options.AddPolicy("RestaurantOwnerOnly", policy => policy.RequireRole(nameof(Employee_Role.RestaurantOwner)));
+    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("RestaurantOwner", policy => policy.RequireRole("RestaurantOwner"));
+    options.AddPolicy("AdminOrOwner", policy =>
+        policy.RequireAssertion(context =>
+        {
+            var roleClaim = context.User.FindFirst(ClaimTypes.Role);
+            if (roleClaim == null) return false;
+            return roleClaim.Value == "Admin" || roleClaim.Value == "RestaurantOwner";
+        }));
 });
 
 // Add Authentication with JWT Bearer   
-builder.Services.AddAuthentication("Bearer")
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
+            RoleClaimType = ClaimTypes.Role,
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
@@ -111,6 +100,10 @@ builder.Services.AddAuthentication("Bearer")
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
     });
+
+builder.Services.AddAuthorization();
+
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
@@ -140,7 +133,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminOrOwner", policy =>
+    options.AddPolicy("AdminOrRestaurantOwner", policy =>
         policy.RequireAssertion(context =>
         {
             var roleClaim = context.User.FindFirst(ClaimTypes.Role);
@@ -150,25 +143,6 @@ builder.Services.AddAuthorization(options =>
                    roleClaim.Value == Employee_Role.RestaurantOwner.ToString();
         }));
 });
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole(nameof(Employee_Role.Admin)));
-    options.AddPolicy("RestaurantOwnerOnly", policy => policy.RequireRole(nameof(Employee_Role.RestaurantOwner)));
-});
-
-var mapperConfig = new MapperConfiguration(cfg =>
-{
-    cfg.CreateMap<Reservation, ReservationResponseDto>()
-        .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.EmployeeName))
-        .ForMember(dest => dest.RestaurantName, opt => opt.MapFrom(src => src.Table.Branch.Restaurant.Name));
-
-    cfg.CreateMap<ReservationDto, Reservation>();
-    cfg.CreateMap<UpdateReservationDto, Reservation>();
-});
-
-var mapper = mapperConfig.CreateMapper();
-builder.Services.AddSingleton(mapper);
-
 
 var app = builder.Build();
 
@@ -179,6 +153,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 
 }
+// done
 
 app.UseHttpsRedirection();
 

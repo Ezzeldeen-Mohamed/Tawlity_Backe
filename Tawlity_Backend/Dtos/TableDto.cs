@@ -13,22 +13,15 @@ namespace Tawlity_Backend.Dtos
         public string? ImageUrl { get; set; }
 
         [Required]
-        public int BranchId { get; set; } // The branch where the table belongs
+        public int RestaurantId { get; set; } // The branch where the table belongs
     }
     public class TableDto
     {
         public int Id { get; set; }
+        public string? Name { get; set; } = string.Empty;
         public int Capacity { get; set; }
         public string? ImageUrl { get; set; }
-        public int BranchId { get; set; }
+        public int RestaurantId { get; set; }
     }
-    public class TableProfile : Profile
-    {
-        public TableProfile()
-        {
-            CreateMap<Table, TableDto>().ReverseMap();
-            CreateMap<CreateTableDto, Table>();
-        }
-    }
-
+   
 }

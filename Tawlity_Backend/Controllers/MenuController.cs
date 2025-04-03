@@ -17,24 +17,40 @@ namespace Tawlity_Backend.Controllers
             _menuService = menuService;
         }
 
-        // ✅ GET /api/menu/restaurant/{id}
-        [HttpGet("restaurant/{id}")]
-        public async Task<IActionResult> GetMenuItemsByRestaurant(int id)
+        [HttpGet("{restaurantId}")]
+        public async Task<IActionResult> GetMenuItemsByRestaurantId(int restaurantId)
         {
-            var menuItems = await _menuService.GetMenuItemsByRestaurantIdAsync(id);
+            var menuItems = await _menuService.GetMenuItemsByRestaurantIdAsync(restaurantId);
             return Ok(menuItems);
         }
 
-        // ✅ POST /api/menu
-        [HttpPost]
-        [Authorize(Roles = "Admin, RestaurantOwner")]
-        public async Task<IActionResult> AddMenuItem([FromBody] CreateMenuItemDto menuItemDto)
+        [HttpGet("Item/{id}")]
+        public async Task<IActionResult> GetMenuItemById(int id)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var menuItem = await _menuService.GetMenuItemByIdAsync(id);
+            if (menuItem == null) return NotFound();
 
-            await _menuService.AddMenuItemAsync(menuItemDto);
-            return Ok(new { message = "Menu item added successfully." });
+            return Ok(menuItem);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddMenuItem([FromBody] CreateMetemDto menuItemDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                await _menuService.AddMenuItemAsync(menuItemDto);
+                return CreatedAtAction(nameof(GetMenuItemsByRestaurantId), new { restaurantId = menuItemDto.RestaurantId }, menuItemDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+
     }
 }
 

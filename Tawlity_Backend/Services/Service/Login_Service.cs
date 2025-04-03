@@ -8,6 +8,8 @@ using Tawlity_Backend.Services.Interface;
 using Tawlity_Backend.Services.IService;
 using BCrypt.Net;
 using Org.BouncyCastle.Tls;
+using Tawlity.Core.Enums;
+using Tawlity_Backend.SomeThingsWeWillUseInTheFuther;
 
 
 namespace Tawlity_Backend.Services.Service
@@ -62,11 +64,20 @@ namespace Tawlity_Backend.Services.Service
                 EmployeeCreditCard = registerDto.EmployeeCreditCard,
                 EmployeeGender = registerDto.EmployeeGender,
                 EmployeePhone = registerDto.EmployeePhone,
-               // Employee_Role = registerDto.Employee_Role
+                Employee_Role=Employee_Role.Customer
             };
+
 
             // Save the employee to the database
             await _repository.AddEmployeeAsync(employee);
+
+            // Send confirmation email
+            await _emailService.SendEmailAsync(registerDto.EmployeeEmail, "Welcome to Tawlity 🎉", $@"
+                <h2>Hello {registerDto.EmployeeName},</h2>
+                <p>Thank you for registering on <b>Tawlity</b>! 🎉</p>
+                <p>You can now start making restaurant reservations and enjoy our services.</p>
+                <p>Best regards,<br/>The Tawlity Team</p>
+                  ");
 
             // Generate and return a JWT token for the registered user
             return GenerateJwtToken(employee);
@@ -85,19 +96,19 @@ namespace Tawlity_Backend.Services.Service
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, employee.EmployeeId.ToString()), // User ID is added
+                new Claim(ClaimTypes.NameIdentifier, employee.EmployeeId.ToString()), // ✅ User ID
                 new Claim(ClaimTypes.Name, employee.EmployeeName),
-                new Claim(ClaimTypes.Role, employee.Employee_Role.ToString())
+                new Claim(ClaimTypes.Role, employee.Employee_Role.ToString()), // ✅ Use ClaimTypes.Role for proper authorization
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(double.Parse(_config["Jwt:ExpiresInMinutes"]!)),
+                expires: DateTime.UtcNow.AddMinutes(double.Parse(_config["Jwt:ExpiresInMinutes"])),
                 signingCredentials: credentials
             );
 
@@ -107,23 +118,26 @@ namespace Tawlity_Backend.Services.Service
         public async Task<string?> ForgotPasswordAsync(ForgotPasswordDto dto)
         {
             var user = await _repository.GetEmployeeByEmailAsync(dto.Email);
+
             if (user == null)
                 return "Email not registered.";
+            else
+            {
+                var token = Guid.NewGuid().ToString();
+                user.ResetToken = token;
+                user.ResetTokenExpiry = DateTime.UtcNow.AddHours(1);
+                await _repository.SaveChangesAsync();
 
-            var token = Guid.NewGuid().ToString();
-            user.ResetToken = token;
-            user.ResetTokenExpiry = DateTime.UtcNow.AddHours(1);
-            await _repository.SaveChangesAsync();
+                var subject = "Reset Your Password";
+                //var resetLink = $"https://localhost:7039/api/Regester/reset-password?token={token}";
+                var resetLink = $"This is your token:( {token} )";
+                //var body = $"<p>Click <a href='{resetLink}'>here</a> to reset your password.</p>";
+                var body = $"<p> {resetLink} to reset your password.</p>";
 
-            var subject = "Reset Your Password";
-            //var resetLink = $"https://localhost:7039/api/Regester/reset-password?token={token}";
-            var resetLink = $"This is your token:( {token} )";
-            //var body = $"<p>Click <a href='{resetLink}'>here</a> to reset your password.</p>";
-            var body = $"<p> {resetLink} to reset your password.</p>";
+                await _emailService.SendEmailAsync(dto.Email, subject, body);
 
-            await _emailService.SendEmailAsync(dto.Email, subject, body);
-
-            return "Password reset link has been sent to your email.";
+                return "Password reset link has been sent to your email.";
+            }
         }
 
         public async Task<string?> ResetPasswordAsync(string token, ResetPasswordDto dto)

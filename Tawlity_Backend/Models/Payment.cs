@@ -18,6 +18,7 @@ namespace Tawlity_Backend.Models
         [Required]
         public string TransactionId { get; set; } // From Stripe/PayPal
 
+
         [Required]
         public string Status { get; set; } // "Completed", "Failed", etc.
 
@@ -30,7 +31,7 @@ namespace Tawlity_Backend.Models
         public virtual User ?User { get; set; }
 
         [ForeignKey("Restaurant")]
-        public int RestaurantId { get; set; }
+        public int ?RestaurantId { get; set; }
         public virtual Restaurant ?Restaurant { get; set; }
     }
 }

@@ -8,7 +8,6 @@ namespace Tawlity_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class RegesterController : ControllerBase
     {
         private readonly Login_IService _loginService;

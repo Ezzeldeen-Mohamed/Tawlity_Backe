@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Tawlity.Core.Enums;
 using Tawlity_Backend.Dtos;
 using Tawlity_Backend.Services.IService;
@@ -8,7 +9,7 @@ using Tawlity_Backend.Services.IService;
 namespace Tawlity_Backend.Controllers
 {
     [ApiController]
-    [Route("api/users")]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -17,50 +18,86 @@ namespace Tawlity_Backend.Controllers
         {
             _userService = userService;
         }
+
+        // 🔹 GET: /api/users (Admin-only)
         [HttpGet]
-        [Authorize(Roles = nameof(Employee_Role.Admin))]
-        [AllowAnonymous]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await _userService.GetAllUsersAsync();
-            return Ok(users);
+            return Ok(await _userService.GetAllUsersAsync());
         }
-        // GET: /api/users/{id}
+
+        // 🔹 GET: /api/users/{id}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
             var user = await _userService.GetUserByIdAsync(id);
-            if (user == null) return NotFound();
-            return Ok(user);
+            return user != null ? Ok(user) : NotFound("User not found.");
         }
 
-        // PUT: /api/users/{id}
-        [HttpPut("{id}")]
-        [Authorize] 
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserDto userDto)
+        // 🔹 PUT: /api/users/{id}
+        //    [Authorize]
+        [HttpPut("UpdateUser/{id}")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserDto dto)
         {
-            var result = await _userService.UpdateUserAsync(id, userDto);
-            if (!result) return NotFound();
-            return Ok(new { message = "User updated successfully." });
+            var updated = await _userService.UpdateUserAsync(id, dto);
+            return updated ? Ok("Success") : NotFound("User not found.");
         }
 
-        // DELETE: /api/users/{id} (Admin only)
+        // 🔹 DELETE: /api/users/{id} (Admin-only)
+        // [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        [Authorize(Roles = nameof(Employee_Role.Admin))]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var result = await _userService.DeleteUserAsync(id);
-            if (!result) return NotFound();
-            return Ok(new { message = "User deleted successfully." });
+            var deleted = await _userService.DeleteUserAsync(id);
+            return deleted ? NoContent() : NotFound("User not found.");
         }
 
-        // GET: /api/users/{userId}/favorites
-        [HttpGet("{userId}/favorites")]
-        public async Task<IActionResult> GetUserFavorites(int userId)
+        //[HttpGet("user-info")]
+        //[Authorize(Roles ="Admin")]
+        //public IActionResult GetUserInfo()
+        //{
+        //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //    var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+
+        //    if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userRole))
+        //    {
+        //        return Unauthorized(new { message = "Invalid user token." });
+        //    }
+
+        //    return Ok(new
+        //    {
+        //        UserId = userId,
+        //        Role = userRole
+        //    });
+        //}
+
+
+        [HttpGet("Profile/{id}")]
+        public async Task<IActionResult> GetUserProfileById(int id)
         {
-            var favorites = await _userService.GetUserFavoritesAsync(userId);
-            return Ok(favorites);
+            var user = await _userService.GetUserProfileByIdAsync(id);
+            return user != null ? Ok(user) : NotFound("User not found.");
         }
-    }
 
+        [HttpGet("Profile")]
+        public async Task<IActionResult> GetUserProfile()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get logged-in user's ID
+            //if (userId == null) return Unauthorized("User not authenticated.");
+
+            var user = await _userService.GetUserByIdAsync(int.Parse(userId));
+            if (user == null) return NotFound("User not found.");
+
+            return Ok(new
+            {
+                user.EmployeeId,
+                user.EmployeeName,
+                user.EmployeeEmail,
+                user.EmployeeCity
+            });
+        }
+        
+
+    }
 }
